@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const wiki = document.createElement('a');
         wiki.className = 'btn wiki';
-        wiki.href = 'https://roblox-grass-cutting-incremental.fandom.com/wiki/Roblox_Grass_Cutting_Incremental_Wiki';
+        wiki.href = 'https://revolutionidle.wiki.gg';
         wiki.target = '_blank';
         wiki.rel = 'noopener noreferrer';
         const wikiImg = document.createElement('img');
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wikiImg.alt = 'Wiki';
         wikiImg.className = 'btn-icon';
         wiki.appendChild(wikiImg);
-        wiki.appendChild(document.createTextNode(' Go to the GCI Wiki!'));
+        wiki.appendChild(document.createTextNode('Visit the Wiki!'));
 
         container.appendChild(wiki);
 
