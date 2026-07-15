@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mega - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #00e1ff; /* Neon Cyan */ }
+
+        /* =========================================
+           1. SIDEBAR & LAYOUT FIX
+           ========================================= */
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+
+        main { margin-left: 260px; padding: 40px; transition: margin 0.3s; position: relative; }
+        @media (max-width: 768px) { main { margin-left: 0; padding: 20px; margin-top: 60px; } #sidebar nav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 12px)); } }
+
+        #sidebar a.active { color: var(--theme-color) !important; border-left-color: var(--theme-color) !important; }
+        #sidebar a:hover { color: var(--theme-color) !important; }
+
+        /* =========================================
+           2. TYPOGRAPHY & CONTENT STYLES
+           ========================================= */
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .guide-container ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        .guide-container li { margin-bottom: 0.8rem; line-height: 1.6; color: #ccc; }
+        li ul { margin-top: 8px; }
+
+        h1.main-title { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0, 225, 255, 0.4); }
+        h2 { font-family: 'Orbitron', sans-serif; color: #fff; font-size: 2rem; margin-top: 3rem; margin-bottom: 1.5rem; padding-bottom: 10px; border-bottom: 2px solid #333; position: relative; }
+        h2::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100px; height: 2px; background-color: var(--theme-color); box-shadow: 0 0 10px var(--theme-color); }
+        h2.major-checkpoint { font-size: 2.5rem; color: var(--theme-color); border-bottom: 4px solid var(--theme-color); text-shadow: 0 0 10px rgba(0, 225, 255, 0.2); }
+        h3 { font-family: 'Orbitron', sans-serif; color: var(--theme-color); font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem; }
+
+        .toc-box { background-color: #151515; border: 1px solid #333; border-left: 4px solid var(--theme-color); padding: 1.5rem; margin-bottom: 3rem; border-radius: 6px; }
+        .toc-title { font-family: 'Yuruka', 'Orbitron', sans-serif; color: var(--theme-color); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; }
+        .toc-list { list-style: none; column-count: 1; padding-left: 0; font-family: 'Yuruka', 'Orbitron', sans-serif !important; font-weight: 700; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list .sub-list { margin: 8px 0 8px 24px; padding-left: 12px; border-left: 2px solid rgba(255,255,255,0.09); }
+        .toc-list a { color: #ddd; text-decoration: none; transition: color 0.2s; font-size: 0.95rem; font-weight: 700; }
+        .toc-list a:hover { color: var(--theme-color); text-decoration: underline; }
+
+        .credits-box { background: rgba(255, 255, 255, 0.03); border: 1px solid #333; border-left: 4px solid var(--theme-color); border-radius: 6px; padding: 1.5rem; margin-bottom: 3rem; display: flex; flex-direction: column; gap: 10px; }
+        .credits-header { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--theme-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .credits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.95rem; color: #bbb; }
+        .credit-role { font-weight: bold; color: #fff; margin-right: 5px; }
+
+        .note { background-color: #151515; border-left: 2px solid var(--theme-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; font-size: 0.95rem; color: #cccccc; transition: transform 0.2s; }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        .warning-text { color: #ff5555; font-weight: bold; text-transform: uppercase; }
+        
+        /* DOT NAV OVERRIDES */
+        #dot-nav { top: 100px; bottom: 50px; transform: none; overflow-y: auto; padding-right: 10px; scrollbar-width: none; -ms-overflow-style: none; gap: 10px; }
+        #dot-nav::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <button id="desktop-expand-btn">☰</button>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>SM & SUM Loop Guide</p>
+            <button id="sidebar-collapse-btn">«</button>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html" class="active">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#sml" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Super Mega</span></a>
+        <a href="#spending-sml" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Spending SML</span></a>
+        <a href="#arrows" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Arrows</span></a>
+        <a href="#blue-realm" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Blue Realm</span></a>
+        <a href="#brass" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Brass</span></a>
+        <a href="#bluestige" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Bluestige</span></a>
+        <a href="#iridium" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Iridium</span></a>
+        <a href="#aotho" class="dot-item"><div class="dot-circle"></div><span class="dot-label">AOTHO</span></a>
+        <a href="#plasma" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Plasmaficate</span></a>
+        <a href="#grass-touch" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Grass Touch</span></a>
+        <a href="#sml-progression" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SML Tips</span></a>
+        <a href="#time-saves" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Time Saves</span></a>
+        <a href="#sml-upgrades" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SML Upgrades</span></a>
+        
+        <a href="#suml" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Super Ultra</span></a>
+        <a href="#spending-suml" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Spending SUML</span></a>
+        <a href="#suml-speedrun" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Speedrun Tips</span></a>
+        <a href="#suml-info" class="dot-item"><div class="dot-circle"></div><span class="dot-label">General Info</span></a>
+        <a href="#suml-upgrades" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SUML Upgrades</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">Super Mega & Ultra</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Original Slides:</span> Reevro</div>
+                    <div><span class="credit-role">Docs Version:</span> Baconhman</div>
+                    <div><span class="credit-role">Design:</span> Mocha</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#sml">Super Mega Loop</a></li>
+                    <div class="sub-list">
+                        <li><a href="#spending-sml">Spending SML Looplets</a></li>
+                        <li><a href="#arrows">Arrows</a></li>
+                        <li><a href="#blue-realm">The Blue Realm</a></li>
+                        <li><a href="#sml-upgrades">SML Upgrades List</a></li>
+                    </div>
+                    <li><a href="#suml">Super Ultra Mega Loop</a></li>
+                    <div class="sub-list">
+                        <li><a href="#spending-suml">Spending SUML Looplets</a></li>
+                        <li><a href="#suml-speedrun">Speedrun Tips</a></li>
+                        <li><a href="#suml-upgrades">SUML Upgrades List</a></li>
+                    </div>
+                </ul>
+            </div>
+
+            <h2 id="sml" class="major-checkpoint">Super Mega Loop Progression</h2>
+            <p>The end has come once again... Welcome to the Super Mega Loop (SML).</p>
+            
+            <h3>SML Resets</h3>
+            <ul>
+                <li>Mega Loops (also forces a Mega Loop)</li>
+                <li>All Previous Looplet Upgrades</li>
+                <li>Lime Charge and Lime Charge EL Upgrades</li>
+            </ul>
+
+            <h3>SML Unlocks</h3>
+            <ul>
+                <li><strong>Super Mega Looplet Upgrades:</strong> To help out with automation.</li>
+                <li><strong>Arrows:</strong> A new currency gained from leftover Looplets on reset. The amount gained scales based on which tier Looplet is left over.</li>
+                <li><strong>The Blue Realm:</strong> A new realm with new things to discover! Based off the first version of the island that lasted until Version 0.4.</li>
+            </ul>
+
+            <h3 id="spending-sml">Spending SM Looplets</h3>
+            <p>Here is the recommended order for spending your Super Mega Looplets:</p>
+            <ol>
+                <li><strong>SML 1: Super Mega Loopier Loops</strong> (Keeps all previous Loopier Loops, and 1.3x multiplier to Loop, giving a 2.73x multi).</li>
+                <li><strong>ML 2 / ML 4:</strong> Pre Galactic Realms & Mega Galactic Realms / Mega Planetoid I & Mega Supernova (Order depends on preference).</li>
+                <li><strong>SML 3: The Realms & Super Mega Planetoid</strong>.</li>
+                <li><strong>ML 2 (Again):</strong> Mega Supernova + Mega Solarians/Tier 9.</li>
+                <li><strong>SML 5: Super Mega Supernova & Loops per Loop</strong> (for 10 LPL without Consumables).</li>
+                <li><strong>SML 7: Super Mega Solarians</strong> (Optional, either get this or don't spend and get arrows).</li>
+                <li><strong>SML 9:</strong> Save looplets for extra arrows on Super Ultra Mega Loop.</li>
+            </ol>
+            <div class="note"><strong>Note:</strong> Skip Mega Looplet upgrades if you want, though this is usually slower and you miss out on a certain feature...</div>
+
+            <h3 id="arrows">Arrows</h3>
+            <p>Arrows are a currency obtained from doing a higher tier loop with excess loops. For example, Mega Looping with 13 Loops will now give you 3 arrows. The Arrow Upgrades can be found in the Loop Shop with its own separate tab.</p>
+            <ul>
+                <li>Assuming you have 60 Arrows, it is recommended to spend 30 Arrows into <strong>Arrow Blue XP</strong>, and save 30 more for <strong>Arrow Blue</strong> after a Bluestige.</li>
+                <li>Try <span class="warning-text">not</span> to go for Arrows during loops because it wastes time you could spend progressing loops and the upgrades aren't really good for progression.</li>
+                <li>Arrow Upgrades do not reset on Super Ultra Mega Loop.</li>
+            </ul>
+
+            <h3 id="blue-realm">The Blue Realm</h3>
+            <p>The Blue Realm (or Blue) is introduced upon reaching Super Mega Loop. It has its own leveling and features. Compaction is disabled here.</p>
+            <ul>
+                <li><strong>Blue Level:</strong> The main leveling system. When leveling up, gain a Brass multiplier per each level (1:1 ratio). Blue XP is affected by Loop Multiplier (base gain 0.1).</li>
+                <li><strong>Blautomation Upgrades:</strong> Unlocked at BL 10. Has partial automation for Blue Realm (offline Brass, automated Iridium). These are not affected by time warps.</li>
+            </ul>
+
+            <h4 id="brass">Brass</h4>
+            <p>Brass is the grass of the Blue Realm. It grows slowly at a base speed of 0.03/s and is capped at 500. With the 'Offline Brass' upgrade, it can be grown offline (time warps do not influence this). Brass is affected by Loop Multiplier.</p>
+
+            <h4 id="bluestige">Bluestige</h4>
+            <p>Bluestige is the prestige of the Blue Realm, unlocked at Blue Level 50. It resets Blue Level, Brass, and Brass Upgrades. The first Bluestige unlocks Iridium and Accomplishments of the Highest Order.</p>
+            <div class="note"><strong>Note:</strong> Bluestige as early as possible so you can unlock these features.</div>
+            <p>Blue can be spent in 4 upgrades boosting Brass, Blue XP, Brass Grow Speed, and Lime Charge EL. Blue is <span class="warning-text">NOT</span> affected by loop multiplier.</p>
+
+            <h4 id="iridium">Iridium</h4>
+            <p>Iridium is a platinum-like currency that has a 1% chance to spawn in place of Brass. Upon Bluestige, you unlock an upgrade allowing Iridium to generate offline. Spend Iridium on Blue or Lime Charge unless saving for Effective Loop Multiplier.</p>
+            <p><strong>Effective Loop Multipliers:</strong> These add their upgrade level to their respective loop multiplier. Try to save for Effective Loop Multiplier and at least 1 level of Effective Mega Loop Multiplier.</p>
+
+            <h4 id="aotho">Accomplishments of the Highest Order [AOTHO]</h4>
+            <p>General tips for speedrunning:</p>
+            <ul>
+                <li>Make sure you have enough consumables to get at least 10 Loops per Loop.</li>
+                <li>Do not time warp at all (time warps count towards the time).</li>
+                <li>Skip features that waste time (like AGH GS 60).</li>
+            </ul>
+
+            <h4 id="plasma">Plasmaficate</h4>
+            <p>Unlocked at Blue Level 150. Forces a Bluestige and resets Blue currency and Bluestige Upgrades (including Lime Charge EL). Doing this gives Plasma, used to boost Brass, Blue XP, and Iridium Value. Doing this for the first time unlocks Grass-Touch.</p>
+
+            <h4 id="grass-touch">Grass-Touch</h4>
+            <p>Unlocked at Blue Level 200. Provides boosts to Blue Realm currencies and Loop Multiplier. Kept on Super Ultra Mega Loop. Each Grass-Touch increases the level requirement by 25.</p>
+
+            <h3 id="sml-progression">Tips for Progression through SML</h3>
+            <ul>
+                <li>Right as you do SML, go to The Blue and try to push Brass upgrades and get more LC upgrades.</li>
+                <li>Try to get to Mega Loops again to get more Loop Multiplier (aim for x100,000 or more).</li>
+                <li>Push the Blue Realm to get Blautomation. Try to get BL 50 and do the first Bluestige instantly.</li>
+                <li>After unlocking Iridium/AOTHO, recover Blue Realm and push Effective Loop and Lime Charge upgrades.</li>
+                <li>Do a Mega Loop speedrun 2/5 (less than 1h 30m) to get +2 LPL. This lets you loop at stage 1k for 6 LPL.</li>
+                <li>Cycle through pushing Blue Realm and Loops to get SML 3, 5, 7, 9, 11.</li>
+            </ul>
+
+            <h3 id="time-saves">Super Mega Loop Time Saves</h3>
+            <ul>
+                <li>AGH GS 24/27 before 1st Sacrifice.</li>
+                <li>Get Dark Tree before entering Planetoid.</li>
+                <li>Early Planetoid -> Ring Break in seconds (Form -> Measure -> AGH GS 45).</li>
+                <li>SNT5 in 2 quick Supernovas (SNT2 -> SNT5). Instantly centralize Prestige, Crystals, Steel.</li>
+                <li>Reach Stage 1k with only 3 Twilights.</li>
+                <li>In D11, it is possible to achieve Legendary and even Mythical gear. D11 stops at the second purple room.</li>
+            </ul>
+
+            <h3 id="sml-upgrades">Super Mega Looplet Upgrades Details</h3>
+            <ul>
+                <li><strong>Super Mega Loops per Super Mega Loop:</strong> (10 Mega Looplets). Gain +1 SML on SML. Resets on SML. Recommended to buy before SML.</li>
+                <li><strong>The Realms:</strong> Keeps Pre-Galactic Realms and Mega Galactic Realms. Essential for speedrunning.</li>
+                <li><strong>Super Mega Planetoid:</strong> Keeps Mega Planetoid I and II. Helps speedrunning.</li>
+                <li><strong>Super Mega Supernova:</strong> Keeps Mega Supernova and adds Remnant autobuyer. Useful for Solarians stage.</li>
+                <li><strong>Super Mega Solarians:</strong> Keeps 'Darkness Arrives' (Darkness Gen x3) and Mega Solarians. Not as useful in 0.9.</li>
+                <li><strong>Super Mega Prism:</strong> Keeps Mega Prism and multiplies Instability cap by 10 (total 100x). Useful, but constellations can be skipped until Solarians.</li>
+                <li><strong>Super Mega Loopier Loops:</strong> Multiplies Global Multi by 1.3x and keeps Mega Loopier Loops. Prioritized first for Blue Realm progression.</li>
+                <li><strong>Keep Restoration:</strong> Keeps Tier 9 Mega Looplet Upgrade and restoration tab. Not generally useful.</li>
+                <li><strong>Lime Charge:</strong> Multiplies Lime Charge generation by 10. <span class="warning-text">Do not buy this upgrade</span>.</li>
+                <li><strong>Loops per Loop:</strong> Increases LPL by +1. Only buy if you can get exactly 9 LPL without consumables.</li>
+            </ul>
+
+            <hr style="border-color: #333; margin: 4rem 0;">
+
+            <h2 id="suml" class="major-checkpoint">Super Ultra Mega Loop</h2>
+            <p>You can quit anytime... Super Ultra Mega Loop (SUML) Progression.</p>
+            
+            <h3>SUML Resets</h3>
+            <ul>
+                <li>Super Mega Loop</li>
+                <li>All Previous Looplet Upgrades</li>
+                <li>Lime Charge and Lime Charge EL Upgrades</li>
+                <li>Blue Realm (except Grass-Touch and Blautomation Upgrades)</li>
+                <li>Note: This will <span class="warning-text">not</span> reset Arrow Upgrades.</li>
+            </ul>
+
+            <h3>SUML Unlocks</h3>
+            <ul>
+                <li><strong>Grapelands:</strong> An unimplemented area for now.</li>
+                <li><strong>Looplet Synthesis:</strong> Also unimplemented.</li>
+            </ul>
+
+            <h3 id="spending-suml">Spending SUML Looplets</h3>
+            <ol>
+                <li><strong>SUML 1: All The Realms</strong> (Keeps Super Mega Planetoid and The Realms).
+                    <ul><li>SML 2: Super Mega Supernova and any other (skip if you want).</li></ul>
+                </li>
+                <li><strong>SUML 3: Super Ultra Mega Supernova (EL) and Super Ultra Mega Solarians (Divine Absorber)</strong>.</li>
+                <li><strong>SUML 5: Super Ultra Mega Loopier Loops</strong> (3.276x boost).</li>
+                <li><strong>Keep a single looplet unspent for the upgrade below.</strong></li>
+                <li><strong>SUML 7: Mega Loops Per Mega Loops II</strong> (costs 3 looplets).</li>
+                <li><strong>SUML 9:</strong> Any (filler upgrades).</li>
+            </ol>
+
+            <h3 id="suml-speedrun">Speedrun Tips</h3>
+            <ul>
+                <li>Skip Prestige, Tier and Platinum pre-Supernova.</li>
+                <li>Galactic -> AGH GS 3 -> AGH GS 30 -> Planetoid -> Galactic for AGH GS 45 -> Break Ring -> Auto GH.</li>
+                <li>Quadrant -> Planetary -> Dark Fruits into Cosmic -> Planetary Trials until 1600 -> GJ 35.</li>
+                <li>SNT5 in 2 quick Supernovas.</li>
+                <li>Ignore Constellations until Solarians.</li>
+            </ul>
+
+            <h3 id="suml-info">General Information</h3>
+            <ul>
+                <li>Upon getting the Galaxy Constellation, you may want to replace your setups.</li>
+                <li>You can ascend Grassland Gear to Ascension 4 or 5.</li>
+                <li>While recovering Blue Realm, do not Plasmaficate unless going for Grass-Touches. Best time for Grass-Touch is immediately before SUML.</li>
+                <li>After first SUML max out Arrow Blue, Arrow Advanced Cutting, and Arrow Plasma.</li>
+            </ul>
+
+            <h3 id="suml-upgrades">SUML Upgrades Details</h3>
+            <ul>
+                <li><strong>Super Ultra Mega Loops per Super Ultra Mega Loop:</strong> (10 SM Looplets). Gain +1 SUML on SUML. Recommended before doing SUML.</li>
+                <li><strong>All The Realms:</strong> Keeps The Realms and Super Mega Planetoid. Prioritized first for recovery.</li>
+                <li><strong>Super Ultra Mega Supernova:</strong> Keeps SM Supernova + EL. EL isn't very useful.</li>
+                <li><strong>Super Ultra Mega Solarians:</strong> Keeps 'Divine Absorber' (Divine Soul Gen x3) and SM Solarians. Useful, eliminates need to sunset.</li>
+                <li><strong>Galaxy Constellation:</strong> Provides boost of Rays, Stars, Swords, and Souls. Keeps 'Super Mega Prism'. Not recommended due to lack of need for constellations.</li>
+                <li><strong>Super Ultra Mega Loopier Loops:</strong> Multiplies Global Multi by 1.2x and keeps SM Loopier Loops. Useful for speedrunning/Blue Realm.</li>
+                <li><strong>Keep Tier 9 and Restoration:</strong> Keeps Keep Restoration. Exact same as SM Loop counterpart.</li>
+                <li><strong>Iridium:</strong> Doubles manually collected Iridium and keeps Lime Charge. Only matters for active players.</li>
+                <li><strong>Loops per Loop II:</strong> Increases loops on loop by +1. Does not keep Loops per Loop.</li>
+                <li><strong>Mega Loops per Mega Loop II:</strong> (3 SUML Looplets). Increases Mega Loops on Mega Loop by +1. Save 1 SUML Looplet for this.</li>
+            </ul>
+
+            <div class="note" style="text-align:center; margin-top:2rem;">
+                Congratulations! You've made it through Super Ultra Mega Loop!
+                <br>Access the Omega Loop Progression Guide <a href="Omega.html" style="color:var(--theme-color);">here</a>.
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

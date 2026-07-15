@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planetoid - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <!-- Link to your main stylesheet -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #d946ef; /* Planetoid Purple */ }
+
+        /* Shared layout & typography */
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .guide-container ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        .guide-container li { margin-bottom: 0.8rem; line-height: 1.6; color: #ccc; }
+
+        h1.main-title { text-shadow: 0 0 10px rgba(217, 70, 239, 0.3); }
+
+        /* Spacing for lists within the guide content */
+        .guide-container ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-container li {
+            margin-bottom: 0.8rem;   /* Space between list items */
+            line-height: 1.6;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>The Planetoid Guide</p>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html" class="active">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#intro" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Intro</span></a>
+        
+        <a href="#planetoid" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Planetoid</span></a>
+        <a href="#ring" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Form Ring</span></a>
+        <a href="#reservatorium" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Reservatorium</span></a>
+        <a href="#astrolabe" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Astrolabe</span></a>
+        <a href="#quadrant" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Quadrant</span></a>
+        
+        <a href="#darktree" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Dark Tree</span></a>
+        
+        <a href="#breakring" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Break Ring</span></a>
+        <a href="#planetary" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Planetary</span></a>
+        <a href="#grassjump" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Grass Jump</span></a>
+        <a href="#trials" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Planetary Trials</span></a>
+        <a href="#lunar" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Lunar Obelisk</span></a>
+        
+        <a href="#constellation" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Constellations</span></a>
+        <a href="#darkcharge" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Dark Charger</span></a>
+        <a href="#arc" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Arcs</span></a>
+        
+        <a href="#star" class="dot-item"><div class="dot-circle"></div><span class="dot-label">The Star</span></a>
+        <a href="#planetrun" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Planet Run</span></a>
+        
+        <a href="#startier" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Star Tier 1</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">The Planetoid</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Written by:</span> 4178</div>
+                    <div><span class="credit-role">Verified by:</span> Projects Team</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">Introduction</a></li>
+                    
+                    <li><a href="#planetoid">The Planetoid</a></li>
+                    <div class="sub-list">
+                        <li><a href="#ring">Form Ring</a></li>
+                        <li><a href="#reservatorium">Reservatorium</a></li>
+                        <li><a href="#astrolabe">Astrolabe</a></li>
+                        <li><a href="#quadrant">Quadrant</a></li>
+                    </div>
+
+                    <li><a href="#darktree">Dark Tree</a></li>
+
+                    <li><a href="#breakring">Break Ring</a></li>
+                    <div class="sub-list">
+                        <li><a href="#planetary">Planetary</a></li>
+                        <li><a href="#grassjump">Grass Jump</a></li>
+                        <li><a href="#trials">Planetary Trials</a></li>
+                        <li><a href="#lunar">Lunar Obelisk</a></li>
+                    </div>
+
+                    <li><a href="#constellation">Constellation</a></li>
+                    <div class="sub-list">
+                        <li><a href="#darkcharge">Dark Charge</a></li>
+                        <li><a href="#arc">Arc Constellations</a></li>
+                    </div>
+
+                    <li><a href="#star">The Star</a></li>
+                    <div class="sub-list">
+                        <li><a href="#planetrun">Planet Run</a></li>
+                    </div>
+
+                    <li><a href="#startier">Star Tier 1</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">Intro</h2>
+            <p>You have reached Planetoid! This is the beginning of the long grind towards your next major goal. Before you get into the guide, there is some important and useful information to note below.</p>
+            
+            <p>You should avoid any of the following actions:</p>
+            <ul>
+                <li>Perform a planetary without increasing your <strong>Planetary Tier (PT)</strong>.</li>
+            </ul>
+
+            <h3>Guide Info & Formatting</h3>
+            <p>This guide will use abbreviations, with the first use of them being marked in bold next to the full version i.e. <strong>Planetary Tier (PT)</strong>. Names of resets and currencies will also be marked in bold for clarity.</p>
+
+            <h2 id="planetoid">The Planetoid</h2>
+            <p>Welcome to the Planetoid. This new realm works similarly to the other realms, with new currencies, xp, and resets. <strong>Cosmic</strong> is the xp used to level up Planetoid level. There’s also an Anti XP bonus from Planetoid levels, which is required to push AGHGS milestones.</p>
+            <p><strong>Observatorium</strong> is this realm’s version of Platinum except it's slightly rarer and its upgrades are more powerful.</p>
+            <p>Get to level 5 to unlock the first reset in the Planetoid.</p>
+
+            <div class="note"><strong>Note 1:</strong> Compaction in the Planetoid is divided by 100,000x (your compaction can’t be lower than 1x).</div>
+            <div class="note"><strong>Tip:</strong> Definitely have TP pins for the Planetoid and all the other realms, as you’ll be teleporting between them pretty often. You can pin TPs in the map.</div>
+
+            <h3 id="ring">Form Ring</h3>
+            <p>Forming the ring resets almost everything in the Planetoid below Planetary despite requiring the lowest level. You get <strong>Rings</strong> from the form ring reset, which can be spent on ring upgrades. These ring upgrades are pretty op and are never reset in the Planetoid (except only once at AGHGS 45).</p>
+
+            <div class="note"><strong>Note:</strong> Form Ring also resets your Observatorium but not Observatorium Upgrades.</div>
+
+            <p>Get 40+ rings on your first ring reset. Spend it on Planetarium and Cosmic. Avoid spending rings on upgrades that boost currencies/xp outside of the Planetoid (except compaction) until later when you’re going for higher AGHGS milestones.</p>
+
+            <h3 id="reservatorium">Reservatorium</h3>
+            <p>While grinding rings, you might notice a ring upgrade that unlocks a new currency: <strong>Reservatorium</strong>.</p>
+            <p>Buying the Basic or Intermediate Reservatorium ring upgrades unlocks the ability to get Reservatorium from the Ring reset. Every time you form the ring, all of your Observatorium is converted into Reservatorium. This is the only way to earn Reservatorium.</p>
+            <p>For now, the Reservatorium upgrades are pretty expensive, so you don’t need to actively grind them every time before you form the ring, but it will be super useful later.</p>
+
+            <h3 id="astrolabe">Astrolabe</h3>
+            <p>The <strong>Astrolabe</strong> reset is unlocked at Planetoid level 31. Get 100+ Astro on your first Astrolabe. Spread it evenly among Planetarium, Grow Speed, and Rings.</p>
+
+            <p>Now would be a good time to get AGHGS 33 which doubles your rings every time your best AGHGS is increased by 3 starting at AGHGS 30. Start maxing any cheap ring upgrades you have not bought, then get as much boost as you can from Astro.</p>
+
+            <h3 id="quadrant">Quadrant</h3>
+            <p>After that long push, you should be able to get around 30 <strong>Measure</strong>. Do your first Quadrant immediately since there is no other way to increase it before your first Quadrant. Performing a Quadrant will reset what Astrolabe does including Astrolabe upgrades.</p>
+
+            <div class="note"><strong>Note:</strong> Be aware that forming the ring will reset your Measure and Measure upgrades!</div>
+
+            <p>You should definitely max Observatorium, then spend the rest on your Measure on Planetarium.</p>
+            <p>Right before you do your next Quadrant, I also recommend going for AGHGS 36 as this will unlock the Dark Tree (and double your Rings again).</p>
+
+            <h2 id="darktree">Dark Tree</h2>
+            <p>AGHGS 36 unlocks the Dark Tree. This generates a currency called <strong>Dark Fruits</strong>. You get 1 Dark Fruit every 2 hours. You can allocate your Dark Fruits to boost a specific currency/xp.</p>
+            <p>The priority order to spend your Dark Fruits on is <strong>Cosmic, Xp, Planetarium</strong>, and then the rest on whatever you want.</p>
+
+            <h2 id="breakring">Break Ring</h2>
+            <p>The grind to AGHGS 45 will take a while. Spend all of your measure on Rings, then grind and buy Astro Rings as much as you can until you can get 5M+ rings. From now on, spam rings until you max the Advanced Planetarium and Advanced Observatorium ring upgrades.</p>
+            
+            <p>You should definitely grind 10M Reservatorium for "Keep Perks..?" on Astro. Grind the Unnatural realm for Compaction and Cloud upgrades. Keep on spamming the ring reset until you get around 10-15 levels into Powerful Cosmic.</p>
+
+            <p>Once you are able to get to around Planetoid level 200 and have some levels of xp upgrades in Measure and Astro, then start going for AGHGS 45! <strong>Breaking the ring is a one-time reset. It resets a majority of Planetoid, however the recovery process won’t take long.</strong></p>
+
+            <p><strong>Breaking the ring unlocks:</strong></p>
+            <ul>
+                <li><strong>1. The Dark Accelerator:</strong> 3 new upgrades that help with getting more dark fruits.</li>
+                <li><strong>2. The Light Forest + Astral Prestige:</strong> Allows you to reset Astral to 0 to increase scaling and get boosts.</li>
+                <li><strong>3. New ring upgrades:</strong> Earn way more Astro, Measure, Observatorium, Steel, etc.</li>
+                <li><strong>4. New resets above Quadrant.</strong></li>
+            </ul>
+
+            <div class="note"><strong>Note:</strong> Grass Tiers above 40 gives an SP boost.</div>
+
+            <h3 id="planetary">Planetary</h3>
+            <p><strong>Planetary</strong> is the first new reset in the Planetoid after breaking the ring. It works similarly to Grasshop. Your goal is to get PT3 to unlock Grass Jump. Spend your Planets on Observatorium, then Planetarium.</p>
+
+            <div class="note"><strong>Note 1:</strong> Planetary is not reset when forming the Ring.</div>
+            <div class="note"><strong>Note 2:</strong> Try to grind 100B Reservatorium for Keep Perks..? II right before you get PT3.</div>
+            <div class="note"><strong>Tip:</strong> Form the ring right after you do a major reset like Planetary so you don’t have to regrind back your Planetoid progress.</div>
+
+            <h3 id="grassjump">Grass Jump</h3>
+            <p>Again, Grass Jump is similar to Grass hop. Always Grass Jump as soon as you can. Your goal now is to get PT6 to unlock the Planetary Trials and Grass Jump 8 to unlock the Lunar Obelisk.</p>
+
+            <div class="note"><strong>Note:</strong> You can turn off the dark mode in the Unnatural realm by clicking on “Disable Evil” in Settings.</div>
+
+            <h3 id="trials">Planetary Trials</h3>
+            <p>Planetary Trials are similar to accomplishments except almost everything in the Planetoid is temporarily reset. The goal of every trial you do is to get as much Planetoid level as you can in 10 minutes (or 1 minute if you’re also doing the Speed challenge).</p>
+
+            <div class="note"><strong>Note 1:</strong> Automations are disabled in Planetary Trials.</div>
+            <div class="note"><strong>Note 2:</strong> Most currencies in the Planetoid are debuffed.</div>
+
+            <h3>Tips for Trials</h3>
+            <ul>
+                <li>Don’t try to waste time grinding Planetoid level if you know you can’t reach the level requirement for the next boost.</li>
+                <li>Recommended order: Basic first, then No Perks II, No Astrolabe, and No Rings, and finally Speed and then Basic again.</li>
+                <li>You can disable automation for Astro by clicking on Stats & Settings and Currencies.</li>
+                <li>After getting PT 8, have auto GH turned on so that you can get some extra Normal XP, which will buff Unnatural XP.</li>
+            </ul>
+
+            <div class="note"><strong>Note:</strong> Your best Planetary Trial challenges will not save if you leave the game during a Planetary Trial.</div>
+
+            <h3 id="lunar">Lunar Obelisk</h3>
+            <p>The Lunar Obelisk is the second obelisk in the Light Forest. You can select any currencies to level it up. Lunar Power is based on how much Moonstone you have.</p>
+            <p>The recommended priority order is: <strong>Cosmic, XP, Observatorium, Dark Fruits, Clouds</strong>, then pick whatever you want.</p>
+            <p>Now use the various boosts from the Lunar Obelisk to push to Planetoid level 301 to unlock Constellations! Get 3 lines for your first Constellation reset.</p>
+
+            <h2 id="constellation">Constellation</h2>
+            <p>Constellation is a reactor-like minigame where you have to place as many buildings without it being too unstable. If your instability capacity ever goes above 90%, your constellation won’t generate any boosts.</p>
+
+            <h3>Constellation Buildings:</h3>
+            <ul>
+                <li><strong>Generator/Ring/Moon:</strong> Generates/boosts its respective currency and generates instability.</li>
+                <li><strong>Stabilizer:</strong> Divides adjacent building’s instability generation rate.</li>
+                <li><strong>Reinforcement:</strong> Increases the instability cap.</li>
+                <li><strong>Amplifier:</strong> Multiplies the effectiveness of adjacent buildings but also makes them more unstable.</li>
+            </ul>
+
+            <p>Ideally, you should have a dedicated and saved setup for each currency/stat (lines, rings, and moon).</p>
+
+            <h3>Setup 1:</h3>
+            <img src="../assets/img/constellation1.png" alt="Constellation Setup 1" class="guide-image">
+
+            <div class="note"><strong>Note:</strong> <p> Please be aware that you are supposed to use these same setups, but increase the tiers of the constellations as you go.</p>
+            If this is not possible due to Instability generation, try a different configuration of tiers, such as lower tier amplifiers</div>
+
+            <h3>Setup 2 (More Powerful, Higher Instability):</h3>
+            <img src="../assets/img/constellation2.png" alt="Constellation Setup 2" class="guide-image">
+
+            <div class="note"><strong>Note 1:</strong> Use Setup 2 if you can. If your constellation is too unstable, upgrade your stabilizer/reinforcement tiers or effectiveness in ring upgrades.</div>
+            <div class="note"><strong>Note 2:</strong> Deleting/selling constellations will refund all of your lines.</div>
+
+            <h3 id="darkcharge">Dark Charge</h3>
+            <p>Dark Charge works similar to Charge in the normal island. The main sources for more dark charge are grass jumps, ring upgrades, and constellation.</p>
+            <p>Your final goal in the Planetoid is to reach GJ 35. You will need to get the planetary trial level 1600 milestone.</p>
+            
+            <div class="note"><strong>Note:</strong> Your dark charge gets reset temporarily during Planetary Trials.</div>
+
+            <h3 id="arc">Arc Constellations</h3>
+            <p>After acquiring 10Qa lines, you will unlock a new constellation building called Arc. Arcs can be spent on arc upgrades next to the line upgrades, but are mainly used on constellation buildings in the arc tab.</p>
+
+            <p>To generate arcs, you need 2 T5 moons that are adjacent to a T1 Basic arc. Start by using setup #1. Once you have enough arcs, you can start using setup #2.</p>
+
+            <h3>Setup 1 (Min Req: 171.7Qa Lines):</h3>
+            <img src="../assets/img/arc1.png" alt="Arc Setup 1" class="guide-image">
+
+            <h3>Setup 2 (Min Req: 12,400 Arcs):</h3>
+            <img src="../assets/img/arc2.png" alt="Arc Setup 2" class="guide-image">
+
+            <div class="note"><strong>Note:</strong> <p> Please be aware that you are supposed to use these same setups, but increase the tiers of the constellations as you go.</p>
+            If this is not possible due to Instability generation, try a different configuration of tiers, such as lower tier amplifiers. The images use T1 constellations for simplicity.</div>
+
+            <h3>Setup 3 (Optional):</h3>
+            <img src="../assets/img/arc3.png" alt="Arc Setup 3" class="guide-image">
+
+            <p>All arc constellations use up <strong>Stellaris</strong>, which is like instability except it’s not generated and it only applies to constellations that cost arcs.</p>
+
+            <h2 id="star">The Star</h2>
+            <p>The Star is the final barrier between The Planetoid and Supernova. There are two stats associated with the star: <strong>Stardust</strong> and <strong>Star Growth</strong>.</p>
+            <p>Your biggest priority is to upgrade your stardust rate and then star growth. Your Planetoid level also directly boosts stardust starting at Planetoid level 450.</p>
+
+            <h3 id="planetrun">Planet Run</h3>
+            <p>Planet run is an optional world where you can do obbies, earn Planet Tokens, and buy upgrades. This entire world is NEVER reset.</p>
+            <p>You can use Planet Tokens to buy Time Warps, or get upgrades. The most important upgrade at the moment is Star growth, you should upgrade it to speed up the wait.</p>
+
+            <h2 id="startier">Star Tier 1</h2>
+            <p>Getting Star Tier 1 will unlock the <strong>Supernova</strong> reset. Doing a supernova will reset everything before it except for flowers and planet run.</p>
+            <p>It is recommended to do your first supernova on star tier 1 for 12 solar shards (or 14 if you are more passive).</p>
+
+            <div class="note"><strong>Note:</strong> Do not go for star tier 2 unless you are willing to wait for 1-2 weeks.</div>
+
+            <hr style="border-color: #333; margin: 4rem 0;">
+            <p style="text-align: center; font-size: 1.2rem; color: #fff;">After seeing all your progress disintegrate, it is time to move onto the next guide!</p>
+
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

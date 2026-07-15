@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omega Loop - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #ff3b3b; /* Red */ }
+
+        /* =========================================
+           1. SIDEBAR & LAYOUT FIX
+           ========================================= */
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+
+        main { margin-left: 260px; padding: 40px; transition: margin 0.3s; position: relative; }
+        @media (max-width: 768px) { main { margin-left: 0; padding: 20px; margin-top: 60px; } #sidebar nav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 12px)); } }
+
+        #sidebar a.active { color: var(--theme-color) !important; border-left-color: var(--theme-color) !important; }
+        #sidebar a:hover { color: var(--theme-color) !important; }
+
+        /* =========================================
+           2. TYPOGRAPHY & CONTENT STYLES
+           ========================================= */
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .guide-container ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        .guide-container li { margin-bottom: 0.8rem; line-height: 1.6; color: #ccc; }
+        li ul { margin-top: 8px; }
+
+        h1.main-title { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 59, 59, 0.4); }
+        h2 { font-family: 'Orbitron', sans-serif; color: #fff; font-size: 2rem; margin-top: 3rem; margin-bottom: 1.5rem; padding-bottom: 10px; border-bottom: 2px solid #333; position: relative; }
+        h2::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100px; height: 2px; background-color: var(--theme-color); box-shadow: 0 0 10px var(--theme-color); }
+        h2.major-checkpoint { font-size: 2.5rem; color: var(--theme-color); border-bottom: 4px solid var(--theme-color); text-shadow: 0 0 10px rgba(255, 59, 59, 0.2); }
+        h3 { font-family: 'Orbitron', sans-serif; color: var(--theme-color); font-size: 1.4rem; margin-top: 2rem; margin-bottom: 1rem; }
+
+        .toc-box { background-color: #151515; border: 1px solid #333; border-left: 4px solid var(--theme-color); padding: 1.5rem; margin-bottom: 3rem; border-radius: 6px; }
+        .toc-title { font-family: 'Yuruka', 'Orbitron', sans-serif; color: var(--theme-color); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; }
+        .toc-list { list-style: none; column-count: 1; padding-left: 0; font-family: 'Yuruka', 'Orbitron', sans-serif !important; font-weight: 700; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list .sub-list { margin: 8px 0 8px 24px; padding-left: 12px; border-left: 2px solid rgba(255,255,255,0.09); }
+        .toc-list a { color: #ddd; text-decoration: none; transition: color 0.2s; font-size: 0.95rem; font-weight: 700; }
+        .toc-list a:hover { color: var(--theme-color); text-decoration: underline; }
+
+        .credits-box { background: rgba(255, 255, 255, 0.03); border: 1px solid #333; border-left: 4px solid var(--theme-color); border-radius: 6px; padding: 1.5rem; margin-bottom: 3rem; display: flex; flex-direction: column; gap: 10px; }
+        .credits-header { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--theme-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .credits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.95rem; color: #bbb; }
+        .credit-role { font-weight: bold; color: #fff; margin-right: 5px; }
+
+        .note { background-color: #151515; border-left: 2px solid var(--theme-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; font-size: 0.95rem; color: #cccccc; transition: transform 0.2s; }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        .warning-text { color: #ff5555; font-weight: bold; text-transform: uppercase; }
+        
+        /* DOT NAV OVERRIDES */
+        #dot-nav { top: 100px; bottom: 50px; transform: none; overflow-y: auto; padding-right: 10px; scrollbar-width: none; -ms-overflow-style: none; gap: 10px; }
+        #dot-nav::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <button id="desktop-expand-btn">☰</button>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>Omega Loop Guide</p>
+            <button id="sidebar-collapse-btn">«</button>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html" class="active">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#omega" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Omega Loop</span></a>
+        <a href="#looplets" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Looplets</span></a>
+        <a href="#speedrun" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Faster Runs</span></a>
+        <a href="#early" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Early Game</span></a>
+        <a href="#planetoid" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Planetoid</span></a>
+        <a href="#solarians" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Solarians</span></a>
+        <a href="#upgrades" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Upgrades</span></a>
+        <a href="#true-end" class="dot-item"><div class="dot-circle"></div><span class="dot-label">True End</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">Omega Loop</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Design:</span> Mocha</div>
+                    <div><span class="credit-role">Looplet Order:</span> Srb1sLav</div>
+                    <div><span class="credit-role">Speedrun Route:</span> 29Baffons, Alexrider</div>
+                    <div><span class="credit-role">Revision:</span> Reevro</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#omega">Omega Loop Progression</a></li>
+                    <div class="sub-list">
+                        <li><a href="#looplets">Recommended Looplet Upgrades</a></li>
+                    </div>
+                    <li><a href="#speedrun">Faster Runs (100B+ Multi)</a></li>
+                    <div class="sub-list">
+                        <li><a href="#early">Early Game Route</a></li>
+                        <li><a href="#planetoid">Planetoid Route</a></li>
+                        <li><a href="#solarians">Solarians Route</a></li>
+                    </div>
+                    <li><a href="#upgrades">Upgrade Details</a></li>
+                    <li><a href="#true-end">True End</a></li>
+                </ul>
+            </div>
+
+            <h2 id="omega" class="major-checkpoint">Omega Loop Progression</h2>
+            
+            <h3>Omega Loop Resets</h3>
+            <ul>
+                <li>Super Ultra Mega Loop</li>
+                <li>All Previous Looplet Upgrades (except Arrow Upgrades)</li>
+                <li>Lime Charge and Lime Charge EL Upgrades</li>
+                <li>Blue Realm (except Grass-Touch and Blautomation Upgrades)</li>
+            </ul>
+
+            <h3>Omega Loop Unlocks</h3>
+            <ul>
+                <li>True End - Unlocked at Omega Loop 10</li>
+                <li>Nothing else, as of now</li>
+            </ul>
+
+            <h3 id="looplets">Recommended Looplet Upgrades</h3>
+            <p>Note: There is no Omega Loops per Omega Loop upgrade.</p>
+            <ul>
+                <li><strong>Omega Loop 1:</strong> Automated</li>
+                <li><strong>Ultra Loop 2:</strong> Super Ultra Mega Solarians</li>
+                <li><strong>Ultra Loop 4:</strong> Mega Loops per Mega Loops II</li>
+                <li><strong>Ultra Loop 6:</strong> Super Ultra Mega Loopier Loops + Iridium</li>
+                <li><strong>Ultra Loop 8:</strong> Keep Tier 9 and Restoration + Loops per Loop II</li>
+            </ul>
+            <p>From now on you repeat the Ultra Looplet upgrades on Omega Loops until the end.</p>
+            <ul>
+                <li><strong>Omega Loop 2:</strong> Omega Solarians</li>
+                <li><strong>Omega Loop 5:</strong> Super Mega Loops per Super Mega Loops II (Save for this upgrade as it makes you do a SUML in 20 loops, or 16 with MLpML II upgrade)</li>
+                <li><strong>Omega Loop 6:</strong> Omega Loopier Loops</li>
+                <li><strong>Omega Loop 7:</strong> Loops per Loop III</li>
+                <li><strong>Omega Loop 8:</strong> Omega Keep Tier 9 and Restoration</li>
+            </ul>
+
+            <h2 id="speedrun">Tips for Faster Runs</h2>
+            <p>Requires around 100B/1e11 loop multi.</p>
+
+            <h3 id="early">Early Game</h3>
+            <p>Cut grass and then Crystallize, press the Multi Grasshop button, Steelie twice and Galactic. Go to anti realm and Liquefy, then Galactic for GS 18+. Sacrifice to update AGH milestones to AGHGS 30+. Go to Planetoid and Form Ring, then do a Quadrant and Form Ring with Reservatorium and Sacrifice to reach AGHGS 45. Walk up to Ring Break and allocate Dark Fruits into XP and Cosmic.</p>
+
+            <h3 id="planetoid">Planetoid</h3>
+            <p>Get enough Reservatorium for Unnatural Realm autocut and Measure gen. Go for Planetary Tier 20+. Teleport to Unnatural Realm, cut some grass and GJ at 35+ for Supernova (If not enough multi, GJ then allocate lunar power and Dark Fruits into xp then GJ35+). Quickly do a Prestige, and Supernova again for SNT5.</p>
+
+            <h3 id="solarians">Solarians</h3>
+            <p>Requires at least Super Ultra Mega Solarians.</p>
+            <ol>
+                <li>Spam Allocate One to All, while you gain stages, form a constellation and place a line generator.</li>
+                <li>Get SNT7 then load your constellation setup and spam Allocate one to all to form the Grasslands portal.</li>
+                <li>Sunrise once, allocate DSouls and teleport to Grassland.</li>
+                <li>Go through the Synthesis portal. Start synthesis, upgrade shards and speed, repeat twice then right click all upgrades.</li>
+                <li>Reach SNT11, allocate to all, allocate DSouls and then sunrise.</li>
+                <li>Now keep allocating DSouls until you get SNT13. Centralize everything, twilight at stage 480+ and spend all singularity points.</li>
+                <li>Allocate USouls, check Synthesis until you get SNT14 at stage 700+ then stay on Synthesis until you reach stage ~980.</li>
+                <li>Immediately go to Floor 1 and loop. Buy the +1 ML upgrade and do a Mega Loop.</li>
+            </ol>
+
+            <h2 id="upgrades">Upgrade Details</h2>
+            <ul>
+                <li><strong>Loops per Loop III:</strong> Increases loops normally gotten by +2. Will not keep Loops per Loop II. Useful for SUML recovery.</li>
+                <li><strong>Automated:</strong> Keeps All The Realms and Super Ultra Mega Supernova on Omega Loop. Gives Normal, Anti, Space, Unnatural, Planetoid, Supernova autobuyers and EL to supernova/multi-GH/GS/GJ/Planetary.</li>
+                <li><strong>Omega Solarians:</strong> Keeps 'Auto Soul I' and SUM Solarians. Auto Soul I is weak, but keeping SUM Solarians gives Divine Absorber, Darkness Arrives, Soul Absorber, Free Compression.</li>
+                <li><strong>Keep Galaxy:</strong> Keeps Galaxy Upgrade on Omega Loop. <span class="warning-text">Don't buy this. It's not worth it.</span></li>
+                <li><strong>Omega Loopier Loops:</strong> Multiplies Global Multiplier by 2x while keeping SUM Loopier Loops. Total 6.552x Loop Multiplier.</li>
+                <li><strong>Omega Keep Tier 9 and Restoration:</strong> Keeps Keep Tier 9 and Restoration. It is just Keep Restoration for the price of an Omega Looplet.</li>
+                <li><strong>Super Mega Loops per Super Mega Loop II:</strong> (3 Omega Looplets). Increases SM Loops on SM Loop by +1. Lets you save 1 SML per SUML.</li>
+            </ul>
+
+            <h2 id="true-end" class="major-checkpoint">True End (6.0)</h2>
+            <p>True End is the final reset layer of World 1.</p>
+            <ul>
+                <li>Doing the True End will fully reset your Loops, Loop Shop, Blue Realm, and Grassland Progress.</li>
+                <li><strong>Exceptions (Not Reset):</strong> Combat Ranks, Gold and Shards (until disconnecting), Special and Rare Mastery tab.</li>
+                <li>Flowers, Rare Flowers, Planet Run, and Time Warps are <strong>not reset</strong>.</li>
+                <li>It does not reset grassland progress (for some reason).</li>
+                <li>Gives a global loop multiplier of 0.7x per true end (Note: text might be outdated in game).</li>
+                <li>Because every currency is floored (rounded down), you may get 0 of a currency until you get at least a 10/7x multiplier for them.</li>
+            </ul>
+            <div class="note"><strong>Note:</strong> Reward: 5,000 Flowers (Achievement) and 'Certified Grass Avoider' title.</div>
+
+            <div class="note" style="text-align:center; margin-top:2rem;">
+                You have finished all the extra content of World 1! Congratulations!! 
+                <br>Now go play World 2 content.
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

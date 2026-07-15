@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supernova - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #ffa500; /* Supernova Yellow */ }
+
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .toc-box { background-color: #151515; border: 1px solid #333; border-left: 4px solid var(--theme-color); padding: 1.5rem; margin-bottom: 3rem; border-radius: 6px; }
+        .toc-list { list-style: none; column-count: 1; padding-left: 0; font-family: 'Yuruka', 'Orbitron', sans-serif !important; font-weight: 700; }
+        @media (max-width: 768px) { .toc-list { column-count: 1; } }
+
+        h1.main-title { text-shadow: 0 0 10px rgba(255, 238, 0, 0.4); }
+
+        /* --- HEADINGS --- */
+        h1.main-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 238, 0, 0.4);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--theme-color);
+            box-shadow: 0 0 10px var(--theme-color);
+        }
+
+        /* Major Checkpoint Headers */
+        h2.major-checkpoint {
+            font-size: 2.5rem;
+            color: var(--theme-color);
+            border-bottom: 4px solid var(--theme-color);
+            text-shadow: 0 0 10px rgba(255, 238, 0, 0.2);
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+                /* --- TEXT CONTENT STYLES (The fix for spacing) --- */
+        p {
+            line-height: 1.7;        /* Increases space between lines of text */
+            margin-bottom: 1.5rem;   /* Adds space after every paragraph */
+            color: #ccc;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Spacing for lists within the guide content */
+        .guide-container ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-container li {
+            margin-bottom: 0.8rem;   /* Space between list items */
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        /* --- TABLE OF CONTENTS --- */
+        .toc-box {
+            background-color: #151515;
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 6px;
+        }
+        .toc-title {
+            font-family: 'Yuruka', 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .toc-list {
+            list-style: none;
+            column-count: 1; /* single column for better hierarchy */
+            padding-left: 0;
+            font-family: 'Yuruka', 'Orbitron', sans-serif !important;
+            font-weight: 700;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list .sub-list {
+            margin: 8px 0 8px 24px; /* stronger indent for sub-items */
+            padding-left: 12px;
+            border-left: 2px solid rgba(255,255,255,0.09);
+        }
+        .toc-list a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .toc-list a:hover {
+            color: var(--theme-color);
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .toc-list { column-count: 1; }
+        }
+
+        /* --- CREDITS BOX --- */
+        .credits-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .credits-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--theme-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #bbb;
+        }
+        .credit-role {
+            font-weight: bold;
+            color: #fff;
+            margin-right: 5px;
+        }
+
+        /* --- NOTE STYLE --- */
+        .note {
+            background-color: #151515;
+            border-left: 2px solid var(--theme-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+            color: #cccccc;
+            transition: transform 0.2s;
+        }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        /* --- IMAGE STYLES --- */
+        .guide-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            display: block;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Warning Text styling */
+        .warning-text {
+            color: #ff5555;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        /* List Styling */
+        ul { margin-left: 20px; margin-bottom: 1.5rem; }
+        li { margin-bottom: 8px; color: #ddd; }
+
+        /* Sidebar Active Color Override */
+        #sidebar a.active {
+            color: var(--theme-color) !important;
+            border-left-color: var(--theme-color) !important;
+        }
+        #sidebar a:hover {
+            color: var(--theme-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>Supernova Guide</p>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html" class="active">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <div id="dot-nav">
+        <a href="#intro" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Intro</span></a>
+        
+        <a href="#snt1" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SNT1</span></a>
+        <a href="#recovery" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Recovery</span></a>
+        <a href="#pushing-next-tier" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Pushing for SNT2</span></a>
+        <a href="#AstralPrestiges" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Astral Prestiges</span></a>
+
+        
+        <a href="#snt2" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SNT2</span></a>
+        <a href="#eclipse" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Eclipse</span></a>
+        <a href="#prism" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Prism</span></a>
+        
+        <a href="#snt3" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SNT3</span></a>
+        
+        <a href="#snt4" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SNT4</span></a>
+        <a href="#persistent" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Persistent Constellations</span></a>
+        <a href="#sunrise" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Sunrise</span></a>
+        
+        <a href="#snt5" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SNT5</span></a>
+    </div>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">Supernova</h1>
+            
+            <!-- Credits -->
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Written by:</span> 4178</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">Intro</a></li>
+                    
+                    <li><a href="#snt1">SNT1</a></li>
+                    <div class="sub-list">
+                        <li><a href="#recovery">Recovery</a></li>
+                        <li><a href="#pushing-next-tier">Pushing to the Next Tier</a></li>
+                        <li><a href="#AstralPrestiges">Astral Prestiges</a></li>
+                    </div>
+
+                    <li><a href="#snt2">SNT2</a></li>
+                    <div class="sub-list">
+                        <li><a href="#eclipse">Eclipse</a></li>
+                        <li><a href="#prism">Prism</a></li>
+                    </div>
+
+                    <li><a href="#snt3">SNT3</a></li>
+
+                    <li><a href="#snt4">SNT4</a></li>
+                    <div class="sub-list">
+                        <li><a href="#persistent">Persistent</a></li>
+                        <li><a href="#sunrise">Sunrise</a></li>
+                    </div>
+
+                    <li><a href="#snt5">SNT5</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">Intro</h2>
+            <p>You have reached Supernova! This is the beginning of the long grind towards your next major goal. Before you get into the guide, there is some important and useful information to note below.</p>
+            
+            <p class="warning-text">You should avoid any of the following actions:</p>
+            <ul>
+                <li>Right clicking an upgrade that cost Solar Shards.</li>
+                <li>Not Spending your Solar Flares when the cap is full.</li>
+            </ul>
+
+            <h3>Guide Info & Formatting</h3>
+            <p>This guide will use abbreviations, with the first use of them being marked in bold next to the full version i.e. <strong>Supernova Tier (SNT)</strong>. Names of resets and currencies will also be marked in bold for clarity.</p>
+
+            <h2 id="snt1">SNT1</h2>
+            <p>Welcome to the Supernova (SN) realm! Right now there are only 2 boards: Solar Upgrades and Supernova Tiers. The Solar Upgrades is where you buy upgrades while the Supernova Tier board shows your Supernova Tier (SNT) and the boosts you get from it.</p>
+
+            <p>You’ll have 3 unlocked tabs on the Solar Upgrades Board. The first two is where you spend Solar Shards while the last one is where you spend <strong>Solar Flares (SF)</strong>. SF are a currency that passively generates. The first SF upgrade you should buy is <strong>The Solar Idler</strong>, then buy whatever you want after that. The Solar Idler generates Solar Shards every 24 hours.</p>
+
+            <div class="note"><strong>Note:</strong> SF Generation is based on the number of SN you have done and the Star Tier that you did it at. You get 10x the SF Generation per Star Tier.</div>
+
+            <p><strong>You should buy Solar Shard upgrades in this order:</strong></p>
+            <ul>
+                <li>Solar Powered (SoP) Grass 1/5000</li>
+                <li>SoP Steel 1/50</li>
+                <li>Constant RF</li>
+                <li>Constant Rings</li>
+                <li>SoP Lines 1/500</li>
+                <li>Orbit</li>
+                <li>Advanced Constellations 1/4</li>
+            </ul>
+
+            <div class="note"><strong>Note 1:</strong> SoP stands for Solar Powered.</div>
+
+            <div class="note"><span style="color: #ff4444; font-weight: bold;"><strong>Note 2:</strong> After buying Constant RF, make sure you turn off RF production.</span></div>
+
+            <h3 id="recovery">Recovery</h3>
+            <p>Recovery is relatively simple. You’ll easily breeze through early game, just don’t forget to do the empower accomplishment. The Rocket Launch Pad only requires 1 rocket part instead of 10, so galactic right away!</p>
+
+            <div class="note"><strong>Tip:</strong> Have an autoclicker for spamming right click to quickly max buy upgrades.</div>
+
+            <p>Get AGH7 next. Don’t forget to unlock Funify and buy SFRGT and Charger Mk II. Now aim for AGHGS 3, then get AGHGS 12. AGHGS 18 isn’t required to unlock the Unnatural realm, so get that ASAP. The huge unnatural grass boost should easily help you unlock Vaporizer and push you very close to Planetoid.</p>
+
+            <p>Planetoid will be pretty much the same except faster. Make sure to get <strong>Keep Perks..?</strong> on Astro before AGHGS 45.</p>
+
+            <p>Unlock Planetary Trials and PT8 first before you unlock the Lunar Obelisk (LO). Then use the boost from LO to unlock Constellations again. Because best Rings is updated automatically, you only need to have your ring constellation setup active very briefly.</p>
+            
+            <div class="note"><strong>Note:</strong> Best Ring is not updated if your constellation is unstable.</div>
+
+            <p>Get PT16 and then use that boost to get GJ 18. After unlocking Dark Charge, get AGHGS 60, then progress until you get Planetary Trial level 1600. Keep on improving your Constellations until you reach GJ 35.</p>
+
+            <p class="warning-text">DO NOT SUPERNOVA AGAIN AT STAR TIER 1.</p>
+
+            <div class="note"><strong>Note 1:</strong> Once you are getting close to SN again, start spending all of your SF on Star Growth, Stardust, and Solar Shard, as waiting for star tier 2 takes a while.</div>
+            <div class="note"><strong>Note 2:</strong> You automatically unlock the new Observatorium upgrades from GJ 40 after doing your first SN.</div>
+
+            <p>Start using these constellation setups once you reach T10 constellations to push for T11:</p>
+
+            <h3>Setup:</h3>
+            <img src="../assets/img/arc4.png" alt="Constellation Setup" class="guide-image">
+
+            <div class="note"><strong>Note:</strong> <p> Please be aware that you are supposed to use these same setups, but increase the tiers of the constellations as you go.</p>
+            If this is not possible due to Instability generation, try a different configuration of tiers, such as lower tier amplifiers</div>
+
+            <h3>Late Arc Setup:</h3>
+            <img src="../assets/img/arc5.png" alt="Late Arc Constellation Setup" class="guide-image">
+
+            <div class="note"><strong>Note 1:</strong> Because there are no T11+ Rings, don’t use the setup above for Rings.</div>
+            <div class="note"><strong>Note 2:</strong> T11+ Moons gives an extra Dark Charge bonus. When making your bolt setup, remove the Stellarium on the bottom right and replace it with a T11+ moon.</div>
+
+            <p>It is highly recommended to spend some of your Planet Tokens from Planet Run to speed up Star Growth even more. Keep on grinding your constellation and star growth until you reach Star Tier 2. This should take around a day.</p>
+
+
+            <h3 id="pushing-next-tier">Pushing to the Next Tier</h3>
+            <p>This part of Supernova is pretty tedious and long. You can choose two ways.</p>
+
+            <p><strong>Option 1:</strong> Grind up star growth until it will take 2 days to reach tier 2. Then go afk and check back every few hours to spend the stardust and your solar flares. You may also obtain Solar Shards from your Solar Idler during this time.</p>
+
+            <p><strong>Option 2 (the better option):</strong> Push your constellation and arc tiers, Grass Jumps and Planetary Trials. Repeat this and farm Planetarys and Planetoid Level. This is because Planetoid level boosts Stardust generation and you can earn more levels through higher compaction.</p>
+            <div class="note"><strong>Note:</strong> Once you get to T2 Star, it will say that T3 Star requires 10 eclipses. This can only be obtainable after reaching SNT2, so don’t go for T3.</div>
+
+            <p> If you choose option 2, be aware that you may be able to push for Astral Prestiges 7 or 8+, boosting stardust further.</p>
+              <h3 id="AstralPrestiges">Astral Prestiges</h3>
+            <div class="note"><strong>Note:</strong> Do note that ASPs are compounding with no soft or hardcaps. They will scale forever, so push them when you can.</div>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0;">
+                <thead>
+                    <tr style="background-color: #1a1a1a; border-bottom: 2px solid #ffa500;">
+                        <th style="padding: 12px; text-align: left; color: #ffa500; font-weight: 700;">Astral Prestige</th>
+                        <th style="padding: 12px; text-align: left; color: #ffa500; font-weight: 700;">Currency</th>
+                        <th style="padding: 12px; text-align: left; color: #ffa500; font-weight: 700;">Multiplier per ASP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #333;">
+                        <td style="padding: 12px; color: #ddd;">ASP 7</td>
+                        <td style="padding: 12px; color: #ddd;">Stardust</td>
+                        <td style="padding: 12px; color: #ddd;">5x per ASP</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #333;">
+                        <td style="padding: 12px; color: #ddd;">ASP 8</td>
+                        <td style="padding: 12px; color: #ddd;">Solar Flares</td>
+                        <td style="padding: 12px; color: #ddd;">3x per ASP</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #333;">
+                        <td style="padding: 12px; color: #ddd;">ASP 9</td>
+                        <td style="padding: 12px; color: #ddd;">Prestige Points</td>
+                        <td style="padding: 12px; color: #ddd;">+100% per ASP</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p></p>
+
+            <h2 id="snt2">SNT2</h2>
+            <p>SNT2 unlocks an extremely useful upgrade that you’re gonna want to get right away, which is <strong>Prisms</strong>. Two new tabs are also unlocked: Automation and Filler upgrades.</p>
+
+            <p><strong>You should buy Solar Shard upgrades in this order:</strong></p>
+            <ul>
+                <li>Prisms</li>
+                <li>Starting Momentum</li>
+                <li>Planetary Jump 2/2</li>
+                <li>Lunar Powered</li>
+                <li>SoP Oil 1/100</li>
+                <li>Sop Arcs 1/500</li>
+                <li>Filler Solar Flares 5-25/1k</li>
+                <li>Solar Flare Capacity 1-2/25</li>
+                <li>Filler Solar Stardust 25+/1k</li>
+                <li>Starting GS 15/20 or 12/20 or 8/20</li>
+                <li>SoP Fun 1/150</li>
+                <li>Broken Ring</li>
+                <li>SoP Lines 2-3/500</li>
+                <li>SoP Arcs 2/500</li>
+                <li>No More Problem</li>
+                <li>SoP Anonymity 1/50</li>
+                <li>SoP Charge 1/100</li>
+                <li>Filler Platinum 5/1000</li>
+            </ul>
+
+            <div class="note"><strong>Note 1:</strong> SoP stands for Solar Powered.</div>
+
+            <div class="note"><strong>Note 2:</strong> Most upgrades in the automation section require a prestige to be done in order to activate it.</div>
+
+            <h3 id="eclipse">Eclipse</h3>
+            <p>SNT2 unlocks Eclipse, which is like a leveling system in the SN realm. Eclipse can be increased by obtaining <strong>Solar Rays</strong>. Solar rays can only be obtained by performing Supernovas. The amount of Solar Rays you get is based off of your Star growth’s OoM and the GJ55 Milestone.</p>
+
+            <p>You also get <strong>Remnants</strong> every time you level up your Eclipse. Spend your first Remnant on Solar Shards. (If you got two, spend it on Star Growth). Star growth is going to be the most important, but once you get more, you can start spending some on Solar Shards and SF.</p>
+
+            <div class="note"><strong>Note:</strong> The SN reset board currently displays the wrong number of Solar Rays and Eclipses that you will get. You will get more than what it says.</div>
+
+            <h3 id="prism">Prism</h3>
+            <p>Prism is a constellation that combines lines, rings, moons, bolts, and arcs together into one constellation. Prisms generate the same amount of instability as line generators. However, they cost 1000x more lines, so it’s recommended to also have a line generator that is one tier higher than the prism to generate more lines.</p>
+
+            <h3>Prism Setup:</h3>
+            <img src="../assets/img/prism1.png" alt="Prism Setup" class="guide-image">
+
+            <div class="note"><strong>Note:</strong> Please be aware that you are supposed to use these same setups, but increase the tiers of the constellations as you go.</div>
+            
+            <p>Once you get back to the Star, grind until you have a T2 star AND 1b+ Star growth. This should be enough to get you more than 10 eclipse. After getting to Eclipse 10, quickly grind back to the Star, and then do the same thing except SN with a T3 star.</p>
+
+            <!-- Major Checkpoint: SNT 3 -->
+            <h2 id="snt3">SNT3</h2>
+            <p>SNT3 unlocks an extremely important boost: <strong>Anti Xp and Unnatural Xp are multiplied by Normal Xp</strong> instead of being boosted at a reduced rate. This means that you will have significantly more Anti and Unnatural Xp, which allows you to unlock the Star almost immediately and be able to get way more Solar Rays from the GJ55 and 100 milestone.</p>
+
+            <p><strong>Buy these solar shard upgrades in this order:</strong></p>
+            <ul>
+                <li>Starting Rings 12/12 (1397 shards) or buy as much as you can, just make sure you get at least 6/12 (274 shards)</li>
+                <li>Mega Dark Fruits</li>
+                <li>Auto Rocket</li>
+                <li>SoP Fun 1/150</li>
+                <li>Filler Star dust 1k/1k</li>
+                <li>Filler Solar Flares 200/1k</li>
+                <li>Solar Flare Capacity 2-4/25</li>
+                <li>SoP Lines 3-4/500</li>
+                <li>SoP Arcs 2/500</li>
+            </ul>
+
+            <div class="note"><strong>Note:</strong> SoP stands for Solar Powered.</div>
+
+            <div class="note"><strong>Note 2:</strong> Keep in mind Mega Dark Fruits does not automate Dark Accelerator upgrades.</div>
+
+            <p>The huge amount of GJ should also be enough for you to get way past Eclipse 95. Try to aim for 20k+ solar shards on SNT4.</p>
+
+            <h2 id="snt4">SNT4</h2>
+            <p>SNT4 has a new upgrade that unlocks <strong>Persistent Constellation</strong>. What makes it unique is that Persistent Constellations DO NOT RESET on a supernova. However, it costs 1QaQd (1e135) lines.</p>
+            <p>SNT4 also unlocks a new reset called <strong>Sunrise</strong>, but you can ignore it until you have a Persistent Constellation in your Constellation.</p>
+
+            <p><strong>You should buy Solar Shard upgrades in this order:</strong></p>
+            <ul>
+                <li>Starting Rings 12/12 (this should definitely be maxed by now)</li>
+                <li>Auto Rocket</li>
+                <li>Starting Star Chat 10/10</li>
+                <li>Dark Accelerator Automation</li>
+                <li>Funny Machine Automation</li>
+                <li>Fun-dry Automation</li>
+                <li>Filler Solar Flares 1k/1k</li>
+                <li>Solar Flare Capacity 7/25</li>
+                <li>Advanced Constellations 4/4</li>
+                <li>SoP lines 9/500 (~73.8k shards, do not skip this upgrade)</li>
+                <li>Last Prism</li>
+                <li>Constellation Grid</li>
+                <li>Ray</li>
+                <li>Star</li>
+                <li>Improver</li>
+                <li>SoP arcs 3-4/500</li>
+            </ul>
+
+            <h3 id="persistent">Persistents</h3>
+            <p>In order to get 1QaQd lines to afford the Last Prism, every challenge in the Planetary Trial to be maxed and the ring upgrade “Lines” should be maxed too. SoP Lines should be at level 9, SoP Lines II should be at level 23, and SoP Lines III should be at level 1.</p>
+
+            <h3>Late Prism Setup:</h3>
+            <img src="../assets/img/prism2.png" alt="Late Prism Setup" class="guide-image">
+
+            <div class="note"><strong>Note:</strong> Be aware that you are meant to upgrade the tiers of the constellations rather than use the base tier shown. Different configurations will be minimally better with prisms at this stage.</div>
+
+            <p>Make sure both of these constellation setups are saved. Use line generators 1 tier higher than your prism. You will most definitely need to use a time warp on the final push.</p>
+
+            <div class="note"><strong>Note 1:</strong> If your line generation is still low, replace a reinforcement and a bulwark with a magnifier.</div>
+            <div class="note"><strong>Note 2:</strong> If you are halfway there to 1QaQd lines, you can do a constellation reset which essentially doubles your produced lines.</div>
+
+            <p>Once you have 1QaQd lines, place the Last Prism anywhere in your constellation. This will persist through SN and all other non-persistent constellation buildings will be reset.</p>
+            <p><strong>Don’t Supernova yet because you should do a sunrise first.</strong></p>
+
+            <h3 id="sunrise">Sunrise</h3>
+            <p>Sunrise is a game mechanic where you ONLY reset your Eclipse for Sunstone and an increased multiplier for Solar Shards and SF cap.</p>
+
+            <p>Before you do your first Sunrise, make sure you have a T4 Star prepared, but don’t Supernova. Your first Sunrise should be done for bare minimum 100 sunstone. After Sunrising, buy 1 level of Sunstone Remnant and the rest on Star Growth. You can Supernova after doing that.</p>
+
+            <div class="note"><strong>Note:</strong> You only need to Sunrise once in this guide.</div>
+
+            <p>Once you have unlocked every Persistent Constellation, use the setup below.</p>
+
+            <h3>Early Persistent Constellation:</h3>
+            <img src="../assets/img/persistent1.png" alt="Early Persistent Constellation" class="guide-image">
+
+            <p>Pushing to Eclipse 265 will require you to do multiple SN. You will need to max Solar Rays I and Solar Rays II in the SF tab, and preferably have at least 100+ levels in Solar Rays Filler. Do your first T5 SN for any amount of Solar Shards.</p>
+
+            <!-- Major Checkpoint: SNT 5 -->
+            <h2 id="snt5">SNT5</h2>
+            <p>SNT5 unlocks the final obelisk in the Light Forest: <strong>The Void Obelisk</strong>. This obelisk allows you to centralize a currency and gives you a singularity in return.</p>
+
+            <div class="note"><strong>Note 1:</strong> You should always centralize currencies as soon as you can, since it’s required to progress and there are no downsides to it. The order that you centralize currency should be the order arranged in the void obelisk, from top to bottom.</div>
+            <div class="note"><strong>Note 2:</strong> Centralizing a currency does not delete it, it just sets the currency to a set value and makes the currency and the buildings of the currency hidden.</div>
+
+            <p>Get ASP 13 and SoP Prestige level 5 and that should be enough to centralize Prestige Points. Go back to the Star and spend your first singularity on Solarians.</p>
+
+            <hr style="border-color: #333; margin: 4rem 0;">
+            <p style="text-align: center; font-size: 1.2rem; color: #fff;">Congratulations for making it to the end of this guide!</p>
+
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

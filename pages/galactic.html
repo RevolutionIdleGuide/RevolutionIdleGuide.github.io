@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root {
+            --theme-color: #00d4ff; /* Galactic Blue */
+        }
+
+        /* =========================================
+           1. SIDEBAR & LAYOUT FIX (The New Code)
+           ========================================= */
+        
+        /* Sidebar Structure */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; 
+            height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+            padding-bottom: env(safe-area-inset-bottom, 12px);
+            display: flex;
+            flex-direction: column;
+            background-color: #111;
+            z-index: 1000;
+            scrollbar-width: thin;
+            scrollbar-color: var(--theme-color) #111;
+        } 
+
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+
+        /* Dot Navigation Positioning & Fix */
+        #dot-nav {
+            position: fixed;
+            left: 280px; /* Sidebar (250) + Gap (30) */
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 900;
+            width: 180px; /* Fixed width for collision calculation */
+        }
+
+        /* COLLISION LOGIC: Hide dots if screen is too short or too narrow */
+        @media (max-height: 850px) {
+            #dot-nav, .dot-nav { display: none !important; }
+        }
+        @media (max-width: 1650px) {
+            #dot-nav, .dot-nav { display: none !important; }
+        }
+
+        /* Main Content Adjustment */
+        main {
+            margin-left: 260px; 
+            padding: 40px;
+            transition: margin 0.3s;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                margin-left: 0;
+                padding: 20px;
+                margin-top: 60px; 
+            }
+            #sidebar nav {
+                padding-bottom: calc(96px + env(safe-area-inset-bottom, 12px));
+            }
+        }
+
+        /* Sidebar Link Coloring */
+        #sidebar a.active {
+            color: var(--theme-color) !important;
+            border-left-color: var(--theme-color) !important;
+        }
+        #sidebar a:hover {
+            color: var(--theme-color) !important;
+        }
+
+        /* =========================================
+           2. TYPOGRAPHY & CONTENT STYLES
+           ========================================= */
+
+        /* Text Spacing */
+        p {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            color: #ccc;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .guide-container ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-container li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        li ul { margin-top: 8px; }
+
+        /* Headings */
+        h1.main-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 12px rgba(255, 59, 59, 0.6);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--theme-color);
+            box-shadow: 0 0 10px var(--theme-color);
+        }
+
+        h2.major-checkpoint {
+            font-size: 2.5rem;
+            color: var(--theme-color);
+            border-bottom: 4px solid var(--theme-color);
+            text-shadow: 0 0 10px rgba(179, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toc-box {
+            background-color: #151515;
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 6px;
+        }
+        .toc-title {
+            font-family: 'Yuruka', 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+            font-family: 'Yuruka', 'Orbitron', sans-serif !important;
+            font-weight: 700;
+        }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list .sub-list {
+            margin: 8px 0 8px 24px;
+            padding-left: 12px;
+            border-left: 2px solid rgba(255,255,255,0.09);
+        }
+        .toc-list a { color: #ddd; text-decoration: none; transition: color 0.2s; font-size: 0.95rem; font-weight: 700; }
+        .toc-list a:hover { color: var(--theme-color); text-decoration: underline; }
+
+        /* Credits Box */
+        .credits-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .credits-header { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--theme-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .credits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.95rem; color: #bbb; }
+        .credit-role { font-weight: bold; color: #fff; margin-right: 5px; }
+
+        /* Note Style */
+        .note { background-color: #151515; border-left: 2px solid var(--theme-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; font-size: 0.95rem; color: #cccccc; transition: transform 0.2s; }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        /* Warning & Important Notice */
+        .warning-text { color: #ff5555; font-weight: bold; text-transform: uppercase; }
+        .important-notice { border: 2px solid #ff5555; background-color: rgba(255, 85, 85, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; text-align: center; }
+
+        /* -------------------- PAGE-SPECIFIC OVERRIDES -------------------- */
+        /* Keep the single-column toc and mobile fallback */
+        .toc-list { column-count: 1; }
+        @media (max-width: 768px) { .toc-list { column-count: 1; } }
+
+        /* Theme-specific title shadows to match original look */
+        h1.main-title { text-shadow: 0 0 10px rgba(0, 212, 255, 0.3); }
+        h2.major-checkpoint { text-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
+
+
+        .credits-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--theme-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #bbb;
+        }
+
+        .credit-role {
+            font-weight: bold;
+            color: #fff;
+            margin-right: 5px;
+        }
+
+        /* --- NOTE STYLE --- */
+        .note {
+            background-color: #151515;
+            border-left: 2px solid var(--theme-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+            color: #cccccc;
+            transition: transform 0.2s;
+        }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        /* Warning Text styling */
+        .warning-text {
+            color: #ff5555;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        /* List Styling */
+        ul { margin-left: 20px; margin-bottom: 1.5rem; }
+        li { margin-bottom: 8px; color: #ddd; }
+
+        /* Sidebar Active Color Override */
+        #sidebar a.active {
+            color: var(--theme-color) !important;
+            border-left-color: var(--theme-color) !important;
+        }
+        #sidebar a:hover {
+            color: var(--theme-color) !important;
+        }
+
+        /* --- 1. SIDEBAR CONFIGURATION --- */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px; 
+            height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+            padding-bottom: env(safe-area-inset-bottom, 12px);
+            display: flex;
+            flex-direction: column;
+            background-color: #111;
+            z-index: 1000;
+            scrollbar-width: thin;
+            scrollbar-color: var(--theme-color) #111;
+        } 
+
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+
+        /* --- 2. DOT NAVIGATION (The fix) --- */
+        #dot-nav {
+            position: fixed;
+            /* Sidebar (250px) + Gap (30px) */
+            left: 280px; 
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 900;
+            /* Give it a fixed width so we can calculate overlap precisely */
+            width: 180px; 
+        }
+
+        /* --- 3. RESPONSIVE & COLLISION FIXES --- */
+        
+        /* HEIGHT COLLISION: 
+           The menu is approx 600px tall. It needs 300px clearance top & bottom.
+           If the window is shorter than 850px, the dots will clip off-screen. 
+           We hide them to prevent this. */
+        @media (max-height: 850px) {
+            #dot-nav, .dot-nav {
+                display: none !important;
+            }
+        }
+
+        /* WIDTH COLLISION:
+           Math: Sidebar (250) + Dots (180) + Gap (40) = 470px on the left.
+           Your content is 900px wide and centered.
+           Collision happens when the screen is narrower than approx 1600px.
+           We set it to 1650px to ensure 0px overlap with scrollbars included. */
+        @media (max-width: 1650px) {
+            #dot-nav, .dot-nav {
+                display: none !important;
+            }
+        }
+
+        /* --- 4. MAIN CONTENT ADJUSTMENT --- */
+        main {
+            /* Standard margins */
+            margin-left: 260px; 
+            padding: 40px;
+            transition: margin 0.3s;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                margin-left: 0;
+                padding: 20px;
+                margin-top: 60px; /* Space for mobile header */
+            }
+
+            #sidebar nav {
+                padding-bottom: calc(96px + env(safe-area-inset-bottom, 12px));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>Galactic Guide</p>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html" class="active">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#intro" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Intro</span></a>
+        <a href="#galactic" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Galactic</span></a>
+        <a href="#stars" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Star Spending</span></a>
+        <a href="#flowers" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Flowers</span></a>
+        <a href="#antigh" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Anti GH</span></a>
+        <a href="#grassskip" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Grass Skip</span></a>
+        <a href="#recovery" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Recovery</span></a>
+        <a href="#agh19" class="dot-item"><div class="dot-circle"></div><span class="dot-label">AGH 19</span></a>
+        <a href="#funify" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Funify</span></a>
+        <a href="#sfrgt" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SFRGT</span></a>
+        <a href="#agh13" class="dot-item"><div class="dot-circle"></div><span class="dot-label">AGH 13</span></a>
+        <a href="#charger" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Charger</span></a>
+        <a href="#agh7" class="dot-item"><div class="dot-circle"></div><span class="dot-label">AGH 7/0</span></a>
+        <a href="#aghgs3" class="dot-item"><div class="dot-circle"></div><span class="dot-label">AGHGS 3</span></a>
+        
+        <a href="#sacrifice" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Sacrifice</span></a>
+        
+        <a href="#unnatural" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Unnatural</span></a>
+        <a href="#normality" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Normality</span></a>
+        <a href="#vaporizer" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Vaporizer</span></a>
+        
+        <a href="#aghgs30" class="dot-item"><div class="dot-circle"></div><span class="dot-label">AGHGS 30</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">Galactic</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Written by:</span> 4178</div>
+                    <div><span class="credit-role">Verified by:</span> SigmaFlo44</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">Intro</a></li>
+                    <li><a href="#galactic">Galactic</a></li>
+                 <div class="sub-list">
+                    <li><a href="#stars">Star Spending</a></li>
+                 </div>
+                    <li><a href="#flowers">Flowers</a></li>
+                    <li><a href="#antigh">Anti GH</a></li>
+                    <div class="sub-list">
+                        <li><a href="#grassskip">Grass Skip</a></li>
+                        <li><a href="#recovery">Recovery</a></li>
+                        <li><a href="#agh19">AGH 19</a></li>
+                        <li><a href="#funify">Funify</a></li>
+                        <li><a href="#sfrgt">SFRGT</a></li>
+                        <li><a href="#agh13">AGH 13</a></li>
+                        <li><a href="#charger">Charger</a></li>
+                        <li><a href="#agh7">AGH 7/0</a></li>
+                        <li><a href="#aghgs3">AGHGS 3</a></li>
+                    </div>
+                    <li><a href="#sacrifice">Sacrifice</a></li>
+                    <li><a href="#unnatural">Unnatural</a></li>
+                    <div class="sub-list">
+                        <li><a href="#normality">Normality</a></li>
+                        <li><a href="#vaporizer">Vaporizer</a></li>
+                    </div>
+                    <li><a href="#aghgs30">AGHGS 30</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">Intro</h2>
+            <p>You have reached Galactic! This is the beginning of the long grind towards your next major goal.</p>
+            <p>Here are some important things you will want to <span class="warning-text">avoid</span> on your journey:</p>
+            <ul>
+                <li>You should not Galactic unless you need to as it is a waste of time.</li>
+                <li>You should go to Anti Realm to gain more SP from manual collection.</li>
+                <li>You should not randomly spend Stars.</li>
+                <li>You should not Sacrifice for 0 DM, or without notable increase from the last.</li>
+                <li>You should farm Moonstone from the Anti Realm as it is worth 10x!!!!</li>
+            </ul>
+
+            <h3>Guide Info & Formatting</h3>
+            <p>This guide will use abbreviations, with the first use of them being marked in bold next to the full version i.e. <strong>Anti GrassHop (AGH)</strong>. Names of resets and currencies will also be marked in bold for clarity.</p>
+
+            <h2 id="galactic">Galactic</h2>
+            <p>Welcome to galactic! You should have gotten 10 stars on your first galactic. It is advised to spend them on Faster Foundry and Stellar Grass Cap (Automation Keeper A isn’t recommended because you can unlock grass autobuyer almost instantly after Galactic).</p>
+            
+            <p>Galactic unlocks quite a few features:</p>
+            <ul>
+                <li><strong>1. Astral:</strong> Gives boosts to multiple currencies and XP, speeding up recovery. You gain Astral levels through Space Power (SP), and you get SP by cutting grass. Higher Astral level gives higher boosts.</li>
+                <li><strong>2. Moonstone:</strong> Just like the board says, is pretty much a rarer version of Platinum. These upgrades help you get more stars and make progression easier overall. (You gain x10 moonstone in the anti-realm).</li>
+                <li><strong>3. Autobuy Advanced:</strong> A new button on the bottom of your screen. This allows you to change how much a currency is spent on an upgrade. The default value is 10%. You typically do not need to change the percentages unless you want an autobuyer to prioritize/avoid an upgrader.</li>
+                <li><strong>4. Auto Accomplishment:</strong> Every 4 hours (this cooldown can be reduced with an upgrade in the Star Chart), Auto Accomplishment increases every Accomplishment’s level by 1 (this does not affect Empower until later on and Auto Accomplishment does not bypass the Accomplishment level cap).</li>
+                <li><strong>5. Impossible Accomplishment:</strong> It boosts Platinum, and can only be completed by Auto Accomplishment.</li>
+            </ul>
+
+            <h3 id="stars">Star Spending</h3>
+            <p>The main point of Stars is to reduce the time to reach Galactic again, allowing you to progress further than before. This means you will want to prioritize spending on things that will increase either Steel, Oil or Charge.</p>
+            <p>You should also focus on things that reduce the actions you take per Galactic, such as automation. This means you will primarily focus on the first two tabs of the Star Chart</p>
+
+            <div class="note"><strong>Note:</strong> Your main priority must be Steel, so choose Faster Foundary first.</div>
+
+            <p>After a Galactic or two, I would recommend pushing further into the Automation Tree, as it unlocks EL Autobuyers for the steel-costing buildings. This will save a lot of time each Galactic run.</p>
+            <p>They should be obtainable with AGH 19, Moonstone Stars and some Grass Skips</p>
+
+            <h2 id="flowers">Flowers</h2>
+            <p>Rare flower is a new currency you unlock from Galactic. They function in the same way as normal Flowers except you get 50 Rare Flowers every hour and they can only be spent on the Rare Flower Shop. For now you can only buy time warps.</p>
+
+            <div class="note"><strong>Note 1:</strong> Rare flower shop resets every 24 hours (time warps cannot reduce this timer).</div>
+            <div class="note"><strong>Note 2:</strong> Do not convert Flowers into Rare Flowers, keep using your normal Flowers to buy Mini Time Warp Generation and Capacity.</div>
+
+            <h2 id="antigh">Anti GH</h2>
+            <p><strong>Anti-Grasshop (AGH)</strong> Milestones give boosts depending on how many Grasshops you did when you Galactic. This is how you will progress through Galactic. For now AGH milestones are not reset and are not revoked if you do a Galactic with more Grasshops.</p>
+
+            <p>Assuming you got AGH 25 on your first galactic, the next AGH milestone you should get is AGH 19. Going any lower would take way too long. AGH 19 will unlock the Star Accumulator in the factory for 1Ud Steel and make astral levels boost stars, which will help you get more stars.</p>
+            <p>The recommended order of the AGH milestones you want to get is 25 > 19 > 13 > 7 > 0, however, you will not be able to immediately hop from one AGH milestone to another, as you will need to do some star runs in between to grind stars.</p>
+
+            <div class="note"><strong>Note:</strong> <strong>Star Runs:</strong> Galactic runs where you grasshop as much as you can. The goal is to grind RF upgrades, Moonstone, and Grass skips to increase your star gain.<br><br>
+            <strong>AGH Runs:</strong> Galactic runs where you focus on a certain AGH milestone instead of stars. <span class="warning-text">You do not do both in the same run!</span></div>
+
+            <h3 id="grassskip">Grass Skip</h3>
+            <p>Galactic will also unlock a new reset in the Anti Realm. <strong>Grass skip (GS)</strong> works very similarly to Grasshop and will be one of the main ways to get more stars at the beginning. Don’t worry if you are sometimes not able to do this reset if you are doing an AGH run.</p>
+            <p>GS8 will also unlock something new, more on that in a later section.</p>
+
+            <div class="note"><strong>Note:</strong> Grass skips are reset on galactic.</div>
+
+            <h3 id="recovery">Recovery</h3>
+            <p>Recovery shouldn’t be too slow due to the various boost you have from Astral, RF upgrades, and AGH milestones. You should be able to do first Prestige for 10k+ PP and first Crystallize for 10k+ Crystals relatively easily.</p>
+            <p>Don’t forget to keep on doing Accomplishments (especially empower), Grasshop as soon as you can (until you get to 19), and grind more steel.</p>
+            
+            <div class="note"><strong>Note:</strong> Make sure you are not missing any upgrades, as this is the most common mistake that slows down recovery.</div>
+
+            <p>Once you unlock decel, get to GH 19 and 1Qt Charge as quickly as you can as this will speed up Anti Realm Progression.</p>
+            <p>Once you get to this point, there are two routes that you can take:</p>
+            <ul>
+                <li>1. Grind some stars first and then go for AGH 19 on the next galactic (for active players)</li>
+                <li>2. Going straight for AGH 19 (requires you to be passive)</li>
+            </ul>
+
+            <p>If you decide to do the first route, be aware that there is a lot of waiting. The only viable way to grind more stars at this stage of the game is from moonstone upgrades and GS. This means that you should get as many GH as you can since you’ll need a ton of Anti XP from Charge in order to reach the Anti Level required for Grass skip.</p>
+
+            <p>Before you do your next Galactic, you want to grind as many GS as you can (you should be able to reach GS6). Don’t forget to buy the Moonstone upgrade that boosts stars. You should be able to get 40+ stars on your second Galactic. Spend it all on Charge.</p>
+
+            <h3 id="agh19">AGH 19</h3>
+            <p class="warning-text">Do not get more than 19 GH as this will invalidate you getting AGH 19.</p>
+            <p>Progression might slow down after Anonymity, but this is normal due to a lower amount of GH than normal. Push to Anti Level 101 to do a Liquefy.</p>
+            <p>Unlocking the Rocket pad shouldn’t be too hard after Liquefy. Making RF will be the slowest part due to a lack of Charge. That is why you should have Empower maxed, have a higher Anti Level, buy charge upgrades from Anti Grass, Anonymity, Platinum, and the upgrades in the Generator building.</p>
+            <p>Galactic immediately once you have rebuilt all 10 Rocket Parts. The amount of stars gained does not matter when you are going for AGH milestones.</p>
+
+            <h3 id="funify">Funify</h3>
+            <p>After you get AGH 19, you should grind for Funify at GS8. This is because AGH 13 requires a ton more Charge multiplier from the Star Chart and other sources that are not reset on Galactic. Upgrades in Funify allows you to gain more stars along with some other boosts. Recovery should be extremely quick, do as many GHs, and don’t forget to complete all Accomplishments except for the Impossible one.</p>
+
+            <div class="note"><strong>Note:</strong> It’s not recommended to try to unlock the Star Accumulator until later in the game.</div>
+
+            <p>Before you start your push to GS8, it is recommended to save a couple thousand RF (you will see why after you get GS8) and max all Momentum upgrades except for maybe growth speed, Grass value, PP, and crystal.</p>
+            <p>Be aware that the push to GS8 will be tough. GS6 is a great opportunity to grind moonstone to buy Moon Stars max Anti XP.</p>
+
+            <p><strong>Tips for GS8:</strong></p>
+            <ul>
+                <li>Every time before you do a GS, max buy all upgrades that boost AP and Oil (Don’t forget Platinum!). This is because AP and Oil generation is based off of your best Anonymity/Liquefy.</li>
+                <li>Turn off RF production so you can use and buy Oil upgrades.</li>
+                <li>You should be able to max both upgrades in the Oil Drilling Rig at around GS6 or GS7.</li>
+                <li>Once you are at the last 10 levels for your grind to Anti Level 271, start buying the upgrade Moon Stars for more stars.</li>
+            </ul>
+
+            <p>GS8 unlocks a new RF upgrade that boosts Fun, so spend all of your RF in Fun, reach Anti Level 271 again, and do the Funify reset for anywhere above 300+ Fun.</p>
+            <p>Your first Funify will unlock The Funny Machine. Spend your first Fun on Fun-dry upgrade, and then spend the rest of your Fun on upgrades in the Fun-dry.</p>
+
+            <div class="note"><strong>Note:</strong> Keep in mind that the requirement to Funify is increased by 10 Anti Levels per Funify. This requirement is reset back to Anti Level 271 when you Galactic.</div>
+
+            <p>Your next goal is to reach 100k Fun to unlock Super Fun Real Good Time (SFRGT) on the next galactic. Spend all of your Platinum and excess stars you have on upgrade in the Fun-dry and then Galactic again for around 500-1000 stars.</p>
+            <p>I also recommend spending around 20 stars on Fun Stars in the Fun-dry, as this makes getting 100k Fun easier.</p>
+
+            <h3 id="sfrgt">SFRGT</h3>
+            <p><strong>SFRGT</strong> is a currency that you generate every second. For now, the generation rate is slow but it will help you throughout your entirely galactic journey. Grind to GS9 for more stars, spend extra Moonstone on Moon Stars (this should definitely be maxed by now) and anything else that is cheap. You can also do a 2nd Funify at Anti Level 281 but this is not required at all unless you want to get an extra 100k Fun for more boosts.</p>
+
+            <h3 id="agh13">AGH 13</h3>
+            <p>Due to you having significantly less Charge, you want to buy as many Charge upgrades as you can from the star chart. You should have Stellar Charge II maxed. Spend the rest of your stars on Stellar Charge III, Faster Foundry, and anything else that will help you get AGH 13.</p>
+            <p>The push to Liquefy might take a while but once you unlock Oil Drilling Rig and Liquefy, then it becomes easier.</p>
+
+            <h3 id="charger">Charger</h3>
+            <p>After getting AGH 13, you should try and get the Charger Mk II upgrade for 1M Fun as this will massively boost Oil, allowing you to gain more RF and Steel. You might need to earn more Fun from Refinery, Fun-dry, or Moonstone upgrades.</p>
+            <p>After getting the upgrade, you should also be able to unlock the Star Accumulator. This building will help you get a lot more stars, especially if you play more passively.</p>
+
+            <div class="note"><strong>Note 1:</strong> The multi on the Star Accumulator caps out after 72 hours (including offline progress). This multi is reset back to 1x every time you Galactic.</div>
+            <div class="note"><strong>Note 2:</strong> When you’re doing an AGH run, don’t waste time getting the Star Accumulator.</div>
+
+            <p>The bare minimum amount of stars you should be getting from this Galactic is 5k+ stars. From now on, you can start spending stars in the Automation section.</p>
+
+            <h3 id="agh7">AGH 7/0</h3>
+            <p>The process of getting AGH 7 will be similar to when you were getting AGH 13: push to Liquefy, get the Oil Drilling Rig, and then buy everything that boosts Charge.</p>
+            <p>Since AGH 7 keeps Accomplishments on GH and Steelie, you can immediately go for AGH 0 after getting AGH 7. The time it takes to get AGH 0 should be around the same time it took to get AGH 7, if not a bit faster.</p>
+
+            <p>AGH 0 unlocks a new type of milestone: <strong>Anti-Grasshop Grass skip (AGHGS)</strong> milestones! They are similar to AGH milestones except you have to get a certain amount of GS while having 0 GH.</p>
+
+            <div class="note"><strong>Note 1:</strong> Don’t forget to regularly check SFRGT from this point on! You gain significantly more SFRGT every time your Astral Level increases.</div>
+            <div class="note"><strong>Note 2:</strong> Don’t forget to buy Assembler Mk. II for 100M Fun. This unlocks 3 new EL upgrades in the Assembler for currencies in the Anti Realm.</div>
+
+            <h3 id="aghgs3">AGHGS 3</h3>
+            <div class="note"><strong>Note:</strong> Maxing Faster Auto Accomplishments makes it so Accomplishments are completed every 15 seconds.</div>
+
+            <p>AGHGS 3 gives you a very op milestone that allows you to get significantly more Anti XP, so get it as soon as you can. You should be able to get AGHGS 15 after AGHGS 3.</p>
+            <p>After AGHGS 15, max all T3 RF upgrades and Mega Rocket Fueled Galactics. This should be able to get you a couple billion stars. With this amount of Stars, max all Stellar Tier V upgrades + Stellar Charge VI. These upgrades should also allow you to reach AGHGS 18.</p>
+
+            <!-- Major Checkpoint: Sacrifice -->
+            <h2 id="sacrifice" class="major-checkpoint">Sacrifice</h2>
+            <p>As the Sacrifice reset board says, <strong>Dark Matter (DM)</strong> is based on the amount of stars you have starting at 1B stars. Try getting at least 50B stars before your first Sacrifice. This should get you to around 150+ DM. Spread your DM evenly across all upgrades.</p>
+
+            <p>First sacrifice unlocks <strong>The Recelerator</strong> upgrade in the Funny Machine. You should buy this as soon as you can. Sacrifice also resets Fun-dry and SFRGT, so do a Funify to recover some of these upgrades, and then do a quick Galactic to recover your stars. Spend all of your excess stars on Fun in Fun-dry.</p>
+
+            <p>To reach the required amount of Fun for the Recelerator, get as many GH and GS as you can and make sure you are constantly upgrading Fun-dry. You should also definitely try and max the Moon Fun upgrade in Moonstone. Once you can get around 50Qt Fun per Funify, you can start spamming Funify to reach 1Sx Fun. It is okay if you need to galactic again to do more of the Funify reset. After getting 1Sx Fun, buy the Recelerator!</p>
+
+            <!-- Major Checkpoint: Unnatural Realm -->
+            <h2 id="unnatural" class="major-checkpoint">Unnatural</h2>
+            <p>Buying the Recelerator unlocks a new building to the left of the Anti Field. This realm is unique in that upgrades here are never reset on galactic and sacrifice.</p>
+
+            <p>Unnatural Realm will unlock <strong>Compaction</strong>, an extremely important mechanic. Compaction will multiply every currency and XP that you get from cutting grass based on your Compaction multiplier near the top of your screen. This also means that Compaction will also boost Platinum and Moonstone by a ton.</p>
+
+            <p>Unnatural Realm will also help massively boost SP and Fun (which can also help with SFRGT), so don’t forget to check SFRGT every once in a while.</p>
+            <p><strong>For now get to Unnatural Level 31 to unlock Normality.</strong></p>
+
+            <h3 id="normality">Normality</h3>
+            <p>Doing your first Normality for 3 <strong>Normality Points (NP)</strong> at Unnatural Level 31 is not recommended as you won’t be able to buy a lot of upgrades. Your NP gain is based on your Unnatural Level so get as much unnatural Level as you can.</p>
+            <p>You should do your first Normality for at least 150k+ NP on your first Normality at around Unnatural Level 70. Spend a majority of your NP on Unnatural Grass, then spend the rest evenly. Now push to Unnatural Level 101 to unlock Vaporizer!</p>
+
+            <h3 id="vaporizer">Vaporizer</h3>
+            <p>The Vaporizer is a building that automatically generates <strong>Clouds</strong>, without having you to reset anything!</p>
+            <p>Unlocking the Vaporizer also unlocks a new NP upgrade that boosts Clouds. This is the only way to increase Cloud generation rate for now. You should do another Normality reset to get more Clouds and prepare yourself for the next AGHGS milestone.</p>
+            <p>Do a Normality for a couple hundred million NP, then grind some Clouds and go for AGHGS 24!</p>
+
+            <h2 id="aghgs30">AGHGS 30</h2>
+            <p>AGHGS 24 unlocks some new Momentum upgrades that should help you for AGHGS 27 and 30. You will also need to do a second Sacrifice for more boosts, the amount of DM you should get on your second Sacrifice is 5M+.</p>
+
+            <p>AGHGS 27 will unlock the <strong>Ultimate Star Chart</strong>, a new section in the star chart. Definitely spend your stars to buy as much Charge and XP as you can. AGHGS 27 also unlocks 2 new DM upgrades that boost NP and Momentum, so do another sacrifice to get those boosts.</p>
+
+            <p>The push to AGHGS 30 will be long, so you should prepare yourself as much as you can before going for it. This means getting as much XP and Charge as you can. Do 1-2 more sacrifices, then grind the Ultimate Star Chart, and lastly grind Unnatural Realm (for more Compaction and XP) and Momentum upgrades.</p>
+
+            <div class="note"><strong>Note:</strong> When you’re going for AGHGS 30, using some of your Mini Timewarps is highly recommended.</div>
+
+            <p>After unlocking AGHGS 30, a new portal will appear in the Galactic realm next to the Moonstone upgrade. This portal will take you to Planetoid.</p>
+            
+            <hr style="border-color: #333; margin: 4rem 0;">
+            <p style="text-align: center; font-size: 1.2rem; color: #fff;">This is where this guide ends, congratulations!</p>
+
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

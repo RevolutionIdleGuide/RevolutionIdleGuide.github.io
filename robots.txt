@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: /sitemap.xml
+# If you'd like to block any directories, add Disallow: /path/

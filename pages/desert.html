@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #f97316; /* Desert Orange */ }
+
+        /* Shared layout & typography */
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+        main { margin-left: 260px; padding: 40px; transition: margin 0.3s; position: relative; }
+        @media (max-width: 768px) { main { margin-left: 0; padding: 20px; margin-top: 60px; } #sidebar nav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 12px)); } }
+
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .guide-container ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        .guide-container li { margin-bottom: 0.8rem; line-height: 1.6; color: #ccc; }
+
+        .toc-box { background-color: #151515; border: 1px solid #333; border-left: 4px solid var(--theme-color); padding: 1.5rem; margin-bottom: 3rem; border-radius: 6px; }
+        .toc-list { list-style: none; column-count: 1; padding-left: 0; font-family: 'Yuruka', 'Orbitron', sans-serif !important; font-weight: 700; }
+        .toc-list li { margin-bottom: 8px; }
+        @media (max-width: 768px) { .toc-list { column-count: 1; } }
+
+        h1.main-title { text-shadow: 0 0 10px rgba(249, 115, 22, 0.4); }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--theme-color);
+            box-shadow: 0 0 10px var(--theme-color);
+        }
+
+        /* Major Checkpoint Headers */
+        h2.major-checkpoint {
+            font-size: 2.5rem;
+            color: var(--theme-color);
+            border-bottom: 4px solid var(--theme-color);
+            text-shadow: 0 0 10px rgba(227, 192, 120, 0.2);
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- TABLE OF CONTENTS --- */
+        .toc-box {
+            background-color: #151515;
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 6px;
+        }
+        .toc-title {
+            font-family: 'Yuruka', 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .toc-list {
+            list-style: none;
+            column-count: 1; /* single column for better hierarchy */
+            padding-left: 0;
+            font-family: 'Yuruka', 'Orbitron', sans-serif !important;
+            font-weight: 700;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list .sub-list {
+            margin: 8px 0 8px 24px; /* stronger indent for sub-items */
+            padding-left: 12px;
+            border-left: 2px solid rgba(255,255,255,0.09);
+        }
+        .toc-list a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .toc-list a:hover {
+            color: var(--theme-color);
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .toc-list { column-count: 1; }
+        }
+
+        /* --- CREDITS BOX --- */
+        .credits-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .credits-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--theme-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #bbb;
+        }
+
+        .credit-role {
+            font-weight: bold;
+            color: #fff;
+            margin-right: 5px;
+        }
+
+        /* --- NOTE STYLE --- */
+        .note {
+            background-color: #151515;
+            border-left: 2px solid var(--theme-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+            color: #cccccc;
+            transition: transform 0.2s;
+        }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        /* --- Q&A and EXPLANATION STYLES --- */
+        .qa-container {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .qa-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+        }
+
+        .qa-title {
+            color: var(--theme-color);
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .explanation-details {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .explanation-details summary {
+            padding: 12px 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+            font-weight: bold;
+            font-size: 0.9rem;
+            background-color: rgba(255, 255, 255, 0.03);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .explanation-details summary:hover {
+            color: var(--theme-color);
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+
+        .explanation-content {
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .explanation-content strong {
+            color: var(--theme-color);
+        }
+
+        /* Warning Text styling */
+        .warning-text {
+            color: #ff5555;
+            font-weight: bold;
+        }
+        
+        /* List Styling */
+        ul { margin-left: 20px; margin-bottom: 1.5rem; }
+        li { margin-bottom: 8px; color: #ddd; }
+
+        /* Sidebar Active Color Override */
+        #sidebar a.active {
+            color: var(--theme-color) !important;
+            border-left-color: var(--theme-color) !important;
+        }
+        #sidebar a:hover {
+            color: var(--theme-color) !important;
+        }
+                /* --- TEXT CONTENT STYLES (The fix for spacing) --- */
+        p {
+            line-height: 1.7;        /* Increases space between lines of text */
+            margin-bottom: 1.5rem;   /* Adds space after every paragraph */
+            color: #ccc;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Spacing for lists within the guide content */
+        .guide-container ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-container li {
+            margin-bottom: 0.8rem;   /* Space between list items */
+            line-height: 1.6;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>Desert Guide</p>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html" class="active">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#intro" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Intro</span></a>
+        <a href="#sandstorm" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Sandstorm</span></a>
+        <a href="#sal1" class="dot-item"><div class="dot-circle"></div><span class="dot-label">SAL 1-5</span></a>
+        <a href="#destabilize" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Destabilize</span></a>
+        <a href="#upper" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Upper Temple</span></a>
+        <a href="#twilight" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Twilight</span></a>
+        <a href="#midnight" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Midnight</span></a>
+        <a href="#faq" class="dot-item"><div class="dot-circle"></div><span class="dot-label">FAQ</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">The Desert</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Archive Data</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Written by:</span> Puppy (w/ Reevro, RedRibbon)</div>
+                    <div><span class="credit-role">Formatted by:</span> Microwave, Reevro</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">Introduction & Notice</a></li>
+                    <li><a href="#sandstorm">1. Desert -> Sandstorm</a></li>
+                    <li><a href="#sal1">2. SAL 1 -> SAL 5</a></li>
+                    <li><a href="#destabilize">3. SAL 5 -> Destabilize</a></li>
+                    <li><a href="#upper">4. Destabilize -> Upper Temple</a></li>
+                    <li><a href="#twilight">5. Upper Temple -> Twilight</a></li>
+                    <li><a href="#midnight">6. Twilight -> Midnight</a></li>
+                    <li><a href="#faq">Desert FAQ</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">Introduction & Notice</h2>
+            <div class="note"><strong>Note:</strong> 
+                <strong>Disclaimer:</strong> This guide generally contains recommendations, but every player should make their own decisions. "I teach you how I play, not how you should play."
+            </div>
+            
+            <p>This guide uses a Q&A format to teach players how to think.
+            <br>Questions are marked <strong>Q(x)</strong>.
+            <br>Answers are marked <strong>A(x)</strong>.
+            <br>In-depth explanations (the "Why") are marked <strong>E(#)-(x)</strong>.</p>
+
+            <p class="warning-text">I highly recommend reading the explanations (contained in dropdowns within each section) for insight into the strategy.</p>
+
+            <!-- SECTION 1 -->
+            <h2 id="sandstorm">1. Desert -> Sandstorm</h2>
+            <p>The first thing to note is that you are unable to leave the desert until SAL (Sandstorm Approval Level) 5. Time warps are also 20% effective on everything in and after the desert unless specified otherwise.</p>
+
+            <p><strong>Final Goal: Desert Level 40</strong></p>
+
+            <p>Important things to note are the 7% doom cactus spawn chance and that Desert Level boosts Cactus by a linear and exponential amount. You’ll want to start by running around and grabbing any cactus you see. Spend evenly until you get about 300-500 per cut then save for the well (10k). After you get that just don’t let it cap out and you'll be fine.</p>
+
+            <p>Any doom sigils you get should be spent in the 1 cost cactus upgrade then the Desert XP upgrade if you max that out. Then cut cacti and continue spending evenly until you get 20k-30k per cut and save for the vase upgrade(1m/1e6).</p>
+
+            <p>The vase upgrade scales ONLY from current cactus amount and any direct upgrades. By this point getting back up to 1m/1e6 cactus is still going to be difficult.</p>
+
+            <p><strong>Q1: How do I spend vases?<br>
+            Q2: How often should I do vase resets?</strong></p>
+
+            <p>Do note that any unspent vases affect the water cap at a rate of +10 per unspent vase. Now that you have vases you can start pushing for desert level 40 to unlock the sandstorm reset. You have 2 options which is reset immediately and go for level 41 to be able to get 1 more upgrade.</p>
+            
+            <p><strong>Q3: How do I spend my 30/35 sand?</strong></p>
+
+            <div class="qa-container">
+                <div class="qa-box">
+                    <span class="qa-title">Answers</span>
+                    <strong>A1:</strong> Spend vases evenly and try to save about 20% of what you got for water cap increase.<br>
+                    <strong>A2:</strong> Not often. You’ll only need 2-3 of them to get to the next part of the guide.<br>
+                    <strong>A3:</strong> 30 sand is 1 autocut, 1 autobuy, 1 cactus, 35 is substituting cactus for desert XP.
+                </div>
+                
+                <details class="explanation-details">
+                    <summary>View In-Depth Explanations (E1)</summary>
+                    <div class="explanation-content">
+                        <p><strong>E1-1:</strong> Vases at the start do not give enough bonuses to be worth resetting a lot for. Their upgrades are not compounding at all and their main use is increasing the water cap, which is pretty weak at the start.</p>
+                        <p><strong>E1-2:</strong> Vase resets in the current progression point are not spammable so resetting them resets you back to almost 0 just with doom sigils and a few vase upgrades. It's better to push than to wait in cases like these.</p>
+                        <p><strong>E1-3:</strong> Automation as per usual is one of the best things in the game to make the experience better. Autocut especially with the desert field’s size, is really good. The autobuyer is a simple QoL change (remember to autobuy advanced them to 100%) and the cactus/XP is giving a small boost that compounds with all other upgrades due to it being the first level.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- SECTION 2 -->
+            <h2 id="sal1">2. SAL 1 -> SAL 5</h2>
+            <p>Remember to read milestone descriptions if you haven’t, including any upcoming ones. It is super important to know what you get when you perform a milestone reset.</p>
+
+            <p><strong>Final Goal: Desert Level 80</strong></p>
+
+            <p>Now that you should have autocut you have 2 options which is afk and let the autocut do the work for you while you do water upgrades and do a vase reset sometimes, or run around the field constantly cutting cacti to try to let doom sigils have a chance to spawn. Option 2 is better if you are willing to run. The gameplay loop should be the same as Desert to Sandstorm other than that, up to getting to SAL 2.</p>
+
+            <p><strong>Q1: How often should I Sandstorm?<br>
+            Q2: How much sand should I get from Sandstorms?</strong></p>
+
+            <p>After SAL 2 the vase upgrade becomes more spammable along with unlocking access to the D-Gauntlet which you should immediately put on the first chamber. Due to being able to spam the vase reset a bit you’ll also end up with more water cap and vases to spend on doom sigils. You can start branching off with doom sigils a bit to get levels in things other than just XP.</p>
+
+            <p><strong>Q3: What should I spend doom sigils on?<br>
+            Q4: How many vases should I leave unspent?</strong></p>
+
+            <p>The gameplay loop from SAL 3-5 is pretty much the same as everything else I mentioned for this section. You’ll unlock a few more desert boosts from the SAL milestones that make everything easier. Focus getting autocut up in the sand upgrade to get levels faster for SALs.</p>
+
+            <div class="qa-container">
+                <div class="qa-box">
+                    <span class="qa-title">Answers</span>
+                    <strong>A1:</strong> Sandstorms aren’t needed for anything other than increasing your Sandstorm Approval Level. It's also generally recommended not to push farther than the level requirement needed unless calculations for the upgrades you want are close to your current sand amount.<br>
+                    <strong>A2:</strong> Sand from sandstorms is not super important because the natural scaling on it is good enough from SAL increases.<br>
+                    <strong>A3:</strong> Doom sigils should be spent on 3-4 levels in everything else before continuing into XP to give everything the extra boost from a new upgrade.<br>
+                    <strong>A4:</strong> At this point you can start leaving more like 50% unspent from the total you got from spamming it when you do decide to start spamming it.
+                </div>
+
+                <details class="explanation-details">
+                    <summary>View In-Depth Explanations (E2)</summary>
+                    <div class="explanation-content">
+                        <p><strong>E2-1:</strong> The reason sandstorms aren’t needed for anything other than SALs is the same reasoning that E1-1 had for vases. The upgrades are just additive. Not a huge boost whether you have a few more after you get like level 10 on them. Autocut and doom sigils would be the only exceptions but still are not worth due to them being far more expensive.</p>
+                        <p><strong>E2-2:</strong> Basically same reasoning as E2-1.</p>
+                        <p><strong>E2-3:</strong> Giving a new boost to an upgrade essentially provides a compounding boost on that first upgrade which is a massive boost in some cases. Getting a few levels in everything allows that boost to stack with any other boosts providing a good reason to deviate from XP at least for a few levels.</p>
+                        <p><strong>E2-4:</strong> As you get more vases you are able to save more vases because the upgrades continue to be of less value and the water upgrades do have compounding upgrades (needs 10k/20k vases) so saving more allows you to get more levels in those.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- SECTION 3 -->
+            <h2 id="destabilize">3. SAL 5 -> Destabilize</h2>
+            <p><strong>Final Goals: Desert Level 180 and Intersection Level 100</strong></p>
+
+            <p>Note that SAL boosts TAP now and you also unlock TAP upgrades across the desert, as well as new gauntlet chambers in the Temple Gauntlet, and regaining access to the rest of the world.</p>
+
+            <p><strong>Q1: What chamber should I be in, and when do I switch the chamber?</strong></p>
+
+            <p>You’ll need to use the desert to push your TAL further. The gameplay loop for SALs generally remains the same until about SAL 8/9 where it starts becoming difficult again. You’ll also max out the doom cactus XP upgrade somewhere around here. You should be able to get SAL 10 if you push hard enough.</p>
+
+            <p><strong>Q2: How do I get more Desert XP?<br>
+            Q3: What is the spending priority for doom sigils?</strong></p>
+
+            <p>Eventually you should be able to get the TAP for TAL 16 through use of the cactus upgrade, sand upgrade, desert relic upgrade, and any remaining boosts from the jungle. Do not forget to get cores, to spend creation as you get it, RP on anything cheap, or buying remnant upgrades. You should be able to max all the jungle chambers by the time you hit TAL 16 to unlock the “Great” complex creation. This is the same as the other CCs and should only take 45m-1h if done properly but can vary.</p>
+
+            <p><strong>Q4: What do I need for more understanding?</strong></p>
+            <p>After you finish with “Great” it should be 100% obvious what to do</p>
+
+            <p><strong>Q5: What do I do now?</strong></p>
+            <p>Anyway now that that’s done you can get TAL 18 probably and if not then a little bit more pushing in the desert will do it. Use the answer from Q2 to help you if you are stuck here. After you get SAL 10 using the new RP upgrade from TAL 17 you should be able to easily get to SAL 11.</p>
+
+            <p><strong>Q6: How do I get more Intersection Experience?</strong></p>
+            <p>After you hit IL100 make sure to read the reset.</p>
+
+            <p><strong>Q7: When do I destabilize(destab) for the first time?</strong></p>
+
+            <div class="qa-container">
+                <div class="qa-box">
+                    <span class="qa-title">Answers</span>
+                    <strong>A1:</strong> You should start in Deserted Chamber and then move to the Sandstorm and after you max the sandstorm you should do a little bit (250-500) of cactus and oasis for the DRelics and new boosts. Run the dooms after this is done, until the need comes up to change it.<br>
+                    <strong>A2:</strong> Desert XP at this point is almost entirely from sand and water. Sand buy next 25s are the only good thing from sand and the water XP upgrade (base cost 200k) is compounding so that will also be a major help. Make sure to spam vases a lot and save like 90% of them for water cap to afford the upgrade.<br>
+                    <strong>A3:</strong> Spending Priority looks something like SSP -> Level 10 on everything left -> Vases -> Water -> Cactus/Sand.<br>
+                    <strong>A4:</strong> If you are struggling with understanding you might have missed Rune Mushrooms in Cavern and Intersection Levels for 97455 (Make sure to spend both after you get them).<br>
+                    <strong>A5:</strong> Max out great chamber first and then max out the others starting with Power, then Life, then doesnt matter. Make sure to use the Rad Chamber for the XP related artifacts.<br>
+                    <strong>A6:</strong> Light runes, Power Levels, Creation, Cores, and any missing XP related RP upgrades.<br>
+                    <strong>A7:</strong> I said read the reset.
+                </div>
+
+                <details class="explanation-details">
+                    <summary>View In-Depth Explanations (E3)</summary>
+                    <div class="explanation-content">
+                        <p><strong>E3-1:</strong> This is because you will need the desert XP and SSP from the jungle chambers to make significant progress in the desert. The desert chambers are done after in order to speed up progress in the desert and push the TAP upgrades there. The artifacts are +100% so it's a new boost and very good.</p>
+                        <p><strong>E3-2:</strong> Should explain itself other than the buy next 25 on sand. The other upgrades are additive and therefore nearly useless without significant amounts of upgrading it. The buy next 25 on sand is a compounding multiplier even with itself so it ends up being really good.</p>
+                        <p><strong>E3-3:</strong> SSP first for pushing gauntlet rooms, then 10 on everything for a good stat baseline from new upgrades. Vases next for water cap, then water to fill that cap, followed by cactus for getting that few more vases but sand is better if close to a buy next 25.</p>
+                        <p><strong>E3-4:</strong> Should explain itself tbh. If still missing then you need more breakthroughs and discoveries.</p>
+                        <p><strong>E3-5:</strong> Great chamber first cause otherwise you have no caps to fill, then power chamber to get more TAP, then Life Chamber for the RP gain to start building to gain more cores for IL100, and then it really doesn’t matter.</p>
+                        <p><strong>E3-6:</strong> Light Runes for Intersection XP, Cavern XP, Conversion rate, and 97455. Power level because of PL6 (2x IXP per PL) Creation for Cavern XP and Intersection XP, Cores because cores are the literal best currency in the game for XP. Any missing XP related RP upgrades cause maybe you missed some of the XP upgrades due to a TA/Collapse.</p>
+                        <p><strong>E3-7:</strong> There is no way to increase Destabilized Remnant gain before you do your first destabilize, so you literally cannot progress without it, just do it lmao</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- SECTION 4 -->
+            <h2 id="upper">4. Destabilize -> Upper Temple</h2>
+            <p><strong>Final Goal: Desert Level 260</strong></p>
+
+            <p>You have destabilized, the first major desert progression reset. Now that SAL 10’s milestone has been disabled, and as compensation it gives x100 TAP, you may have to grind the Life Chamber more for more RP.</p>
+
+            <p><strong>Q1: Which automation upgrades should I spend my first 10 destabilized remnants(DRems) on?</strong></p>
+
+            <p>Your new goal is to recover from your first Destabilize and additionally unlock the fifth Complex Creation on your second one. Recovery consists of gaining back the stuff that got reset which is Light runes, Relics, Creation, Remnants, RP, and Cores. After you recover, you should get TAL 21 before your next destab, as it will boost Destabilized Remnants and add a Time Multi.</p>
+
+            <p><strong>Q2: How do I recover from a destab?<br>
+            Q3: How many DRems should I get for the 2nd destabilize.<br>
+            Q4: What do I spend my DRems on?</strong></p>
+
+            <p>After you recover again you should be able to unlock CC5. Complete this ASAP for Degeneration. It should take the usual 45m-1h and if you find yourself struggling then use the tips found in A3-4/E3-4. You’ll start generating DP after you finish and this currency is very good for the next part of the game.</p>
+
+            <p><strong>Q5: What do I spend DP on? When do I switch focus?</strong></p>
+
+            <p>You should be able to get SAL 14 from this and then need a 3rd destab to get to SAL 15 but you can also wait for it if you waited long enough for DP.</p>
+
+            <p><strong>Q6: How many DRems on 3rd destab?<br>
+            Q7: When do I wait for SAL 15?</strong></p>
+
+            <div class="qa-container">
+                <div class="qa-box">
+                    <span class="qa-title">Answers</span>
+                    <strong>A1:</strong> I prefer Creation and RP.<br>
+                    <strong>A2:</strong> For destab recovery I like to put my gauntlet chamber on Life Chamber for RP gains and then do an awakening for Instability/Intersection and Cavern Unlocks, then upgrade 97455 to get a collapse for 10k+ rems for the links and 97455 autobuyers. Do a TA for light rune recovery and spend evenly on every currency with leftovers into TAP. Then do another collapse for at least 100m/1e8 remnants and DO NOT SPEND THEM because you'll need a core for remnant generation from this. After you get a level in every core upgrade you should be able to get and spend light runes again and be mostly recovered at this point. You’ll still need to afk a bit to truly recover all cores and creation back and you can probably switch over to Rad Chamber at some point for relic recovery but the desert gauntlet chambers are also decent enough and realistically only should be used if you aren’t planning on afking.<br>
+                    <strong>A3:</strong> You should get 200-300 destabilized remnants on your second at an absolute minimum.<br>
+                    <strong>A4:</strong> Get the other two automation upgrades, and 2 levels in Max Creation Energy. Divide your leftover remnants evenly, including the currently locked upgrade (base cost is 40) and just save those DRems.<br>
+                    <strong>A5:</strong> Spend into the first rp upgrade up to like 15 then spend into desert XP. If it ever builds up high enough then get a few levels into the more expensive ones before going back to the cheap stuff but you'll likely just max the cheap stuff.<br>
+                    <strong>A6:</strong> You should be able to get 2k+ on this and then split between DP and desert XP<br>
+                    <strong>A7:</strong> You should be able to wait for SAL 15 after you can get Desert Level 240 within like 2 mins
+                </div>
+
+                <details class="explanation-details">
+                    <summary>View In-Depth Explanations (E4)</summary>
+                    <div class="explanation-content">
+                        <p><strong>E4-1:</strong> You cannot buy anything meaningful with 10 Destabilized Remnants so you’re forced to buy automation. Creation and RP help as it allows you to ignore upgrading them to some extent. (the RP autobuyer doesn’t cover the Shiny Desert upgrades) Relics is not chosen because its not something that needs constant attention like Creation and doesn’t get reset by TA/Collapse like RP.</p>
+                        <p><strong>E4-2:</strong> Obviously, you need to recover everything you lost. I did explain the reasoning for most decisions in the answer.</p>
+                        <p><strong>E4-3:</strong> Read A4 to see what to spend them on. The maximum gain is 675 with TAL 21 and waiting a day for that isn’t really worth the extra time if you are sitting on being able to do a destab because the time multi is exponential. The cost for 1 level in everything remaining + an extra level in CE cap is about 200 DRems so that's why that's the minimum recommended.</p>
+                        <p><strong>E4-4:</strong> Buying Max Creation Energy will help you to reach the next complex creation. (it even says that in its description) The Light Rune autobuyer also comes with EL so it’s insanely good for fast recovery. The relic autobuyer is kinda meh but it’s cheap so why not. The spending evenly is just because they are all new boosts so all are good to get at least 1 level in. Saving the DRems for the locked upgrade allows you to get more DRems on a 3rd destab should you choose to do that.</p>
+                        <p><strong>E4-5:</strong> DP upgrades are much like RP where they don’t scale in price with an additive effect and lots of levels. Spending to get new multipliers is great but ultimately it's kinda just waiting for it.</p>
+                        <p><strong>E4-6:</strong> Basically trying to just get the final push of desert XP needed for SAL 15. Spending in desert XP and DP are both pretty much direct sources of desert XP.</p>
+                        <p><strong>E4-7:</strong> If you can get Desert Level 240 in 2 minutes, then you can get 260 in around a few hours or less.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- SECTION 5 -->
+            <h2 id="twilight">5. Upper Temple -> Twilight</h2>
+            <p><strong>Final Goal: Twilight with at least 30 essence</strong></p>
+
+            <p>You have opened the rift to the Upper Temple! It is a location that is high above the Jungle, however is the 2nd part of the desert area. The rift is located at the Destabilize teleport. Upon entering there is a new grass type that spawns called star fragments.</p>
+
+            <p><strong>Q1: How should I spend my star fragments?</strong></p>
+
+            <p>You should be able to get TAL 22 (read the milestone please) for free without any effort, and after getting the new temple XP upgrades in the desert it should be relatively free to get TAL 23. Do note that temple level xp requirement scales at a rate of about 1.8x compounding, and star fragments get boosted massively by the temple level.</p>
+
+            <p><strong>Q2: What gauntlet chamber should I be using?<br>
+            Q3: How do I spend DP?</strong></p>
+
+            <p>Now you should be able to get TAL 25 to unlock the twilight reset easily. Destabilizing here is also quite a good option because it should allow for getting all the new upgrades unlocked from . TAL 26 is extremely good because it unlocks the core upgrade for desert XP. You can use this to get SALs above 16 to abuse that milestone for the x2 temple xp.</p>
+
+            <p><strong>Q4: How many DRems do I get for the next destab?</strong></p>
+
+            <p>After getting that destab it should be smooth sailing up to temple level 30. You will need temple level 35+ for finishing the goal of this section.</p>
+
+            <p><strong>Q5: How much twilight essence should I get?</strong></p>
+
+            <div class="qa-container">
+                <div class="qa-box">
+                    <span class="qa-title">Answers</span>
+                    <strong>A1:</strong> Spend evenly until pushing for a specific thing. Water Autobuy is an absolute must, before going back to the desert.<br>
+                    <strong>A2:</strong> Start by focusing on “The Stars” in the desert gauntlet and get like 20 artifacts in that before quickly switching to the “Temple Chamber” in the jungle gauntlet and also getting like 20. Switch back to “The Stars” and then cap it before capping out the “Temple Chamber”. Run the Dooms after that to cap out for that temple XP upgrade<br>
+                    <strong>A3:</strong> Spend DP on basically whatever the cheapest upgrade is after getting any new multipliers you are able to get.<br>
+                    <strong>A4:</strong> You should be able to easily get 70k+ with help from the Star Fragment and DP upgrade along with TAL 25+ (4x time multi)<br>
+                    <strong>A5:</strong> You clearly didn’t read the final goal of this section (30+)
+                </div>
+
+                <details class="explanation-details">
+                    <summary>View In-Depth Explanations (E5)</summary>
+                    <div class="explanation-content">
+                        <p><strong>E5-1:</strong> The upgrades are all extremely good especially at the start when they are all new multipliers, Water autobuy is great because spamming vase reset becomes that much easier along with far more vases. At this point you can spend as many vases as possible to spend although maybe ignore temple XP if it reduces your water cap back to under 10b/1e10.</p>
+                        <p><strong>E5-2:</strong> You want the new multipliers before maxing it out just to start making good progress. Running dooms after just gives that temple xp upgrade.</p>
+                        <p><strong>E5-3:</strong> Again, it's just new multipliers, then whatever is cheapest because it's usually cheap and the next one isn't affordable/worth it to max out.</p>
+                        <p><strong>E5-4:</strong> You unlocked new upgrades and now need enough DRems to actually afford them. 50k is a decent amount while also not requiring an absurd amount of grinding from what I remember.</p>
+                        <p><strong>E5-5:</strong> It's just to afford the first levels of most of the relevant Twilight Essence upgrades.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- SECTION 6 -->
+            <h2 id="midnight">6. Twilight -> Midnight</h2>
+            <p><strong>Final Goal: Temple Level 100</strong></p>
+
+            <p>This is the last jump before the next progression channel! You have done a twilight, the second major desert progression reset. Have fun recovering. You should also be able to get TAL 27 after recovering.</p>
+
+            <p><strong>Q1: What do I spend for my first Twilight Essence upgrades?<br>
+            Q2: How do I recover the Desert?</strong></p>
+
+            <p>After recovery, your goal now is to progress in the Desert, and reach SAL 20 to unlock the final Complex Creation. When you unlock it, it should take you around 20-30m. You additionally unlock a new feature in the realm of understanding, Epiphany. Refer to A3-4 and E3-4 if you need more understanding.</p>
+
+            <p><strong>Q3: When should I do Epiphany resets?</strong></p>
+
+            <p>The final complex creation finds a lost reset layer in the Desert, Fossilize. It resets everything the sandstorm reset would do for bones.</p>
+
+            <p><strong>Q4: How much do I do my first fossilize for?</strong></p>
+
+            <p>Bones are amazing for getting more tap, twilight essence, Temple XP, and DP. The upgrades start incredibly cheap and if you have enough cores, recovery in the desert is insanely fast which makes fossilize spammable. This will be the main form of progress while working toward twilights due to the direct essence buff and the compounding Temple XP upgrade. You should also be able to get TAL 28/29 after doing a fossilize. Start working toward a 2nd twilight.</p>
+
+            <p><strong>Q5: When should I do my second twilight, and what should I spend it on?</strong></p>
+
+            <p>Do note that the Tier 2 Artifact and DP upgrades will double their cost scaling after Level 10. Now that you have done your second twilight, your goal is to get the Twilight DP upgrade to Level 10+ to be able to push to Temple Level 100. DP is the main source of Temple XP alongside Bones. Do note that the Tier 2 Artifact and DP upgrades will double their cost scaling at Level 10.<br>
+            At this point just recover again and prepare for a Destabilize, which should be the final one before Midnight. If possible get TAL 30 before this but if not then don’t worry about it.</p>
+
+            <p><strong>Q6: How many DRems should I get on this Destab?</strong></p>
+
+            <p>If you don’t remember how to recover from a destab refer to A4-2. Especially remember cores as these now affect your desert XP. Spending should be simple, just follow what you hopefully have learned and you will be fine. After recovering everything you should prepare to do a 3rd twilight.</p>
+
+            <p><strong>Q7: How much Twilight essence do I get for the 3rd Twilight, and how do I spend it?</strong></p>
+
+            <p>Now that you have done the (probably) final twilight before a midnight, you should recover as normal and remember to buy new DP upgrades that became affordable from buying the upgrade. After this it should be pretty smooth to Temple Level 100. I personally recommend doing the first Midnight on 102 but if you have enough Temple XP multipliers to go further than that then it can be very worth it to do so. Thanks for making it to the end of the guide and I hope you learned something from it in both game knowledge, as well as how to think for yourself in this game.</p>
+
+            <div class="qa-container">
+                <div class="qa-box">
+                    <span class="qa-title">Answers</span>
+                    <strong>A1:</strong> You should get at least Vase generation and Multi Sandstorm. Spend your twilight essence evenly on everything else.<br>
+                    <strong>A2:</strong> Desert recovery after a Twilight consists of recovering Sand, Doom Sigils, and Artifacts. The way I like to do this is running all artifact chambers for about 10 procs before moving to the stars, then the oasis, then the cactus. This should also recover your Desert Relics pretty fast. Doom sigils can be collected manually while waiting on artifact gain. Sand is easily recovered by just doing a Sandstorm whenever you’ll gain a SAL or more. After hitting SAL 15 immediately go and recover star fragment upgrades. Other than that just remember to spend any currencies you don't have autobuyers for yet. After beating CC6 you’ll also have to add fossilize into the mix. “The Remains” should be ran after the stars and do fossilize resets after recovering most of everything else. Remember to form cores every so often.<br>
+                    <strong>A3:</strong> You should do Epiphany resets immediately to unlock the milestones.<br>
+                    <strong>A4:</strong> It doesn’t matter how much you fossilize for the first time, because there is an artifact and a DP upgrade that boosts bones unlocked after TAL 28. Help menu says to get around 100-1,000.<br>
+                    <strong>A5:</strong> Your second twilight should be for around 20k essence to increase your DP to buy upgrades that boost RP, Bones and Temple XP. Spend the rest evenly.<br>
+                    <strong>A6:</strong> You should easily get 25m/2.5e7+ with the twilight upgrade at level 20, SAL 22, TAL 29, Star Fragment Upgrade maxed, DP upgraded maxed, and 4x Time multi.<br>
+                    <strong>A7:</strong> Your third twilight should be for around 1M/1e6. Refer to A6-5 if you need to remember how to spend it. Ignore DRems though as they will not be being used again before the upgrade gets reset.
+                </div>
+
+                <details class="explanation-details">
+                    <summary>View In-Depth Explanations (E6)</summary>
+                    <div class="explanation-content">
+                        <p><strong>E6-1:</strong> Vase generation allows you to stop doing vase resets and allows water capacity to passively build up over time, while Multi Sandstorm allows you to get SAL faster. The other upgrades are new multipliers that you should get.</p>
+                        <p><strong>E6-2:</strong> Basically just regaining multipliers as fast as possible while trying not to overlap things. New multipliers first then maxing them out later. Upper temple is insanely powerful for pre upper temple recovery so thats why the moment SAL 15 is reached you need to go and buy upgrades. The gauntlet order is just whatever I found the most useful, and then the rest should be self explanatory.</p>
+                        <p><strong>E6-3:</strong> As Epiphany is a milestone based reset, there’s no reason to stall doing it. Also, Epiphany 2 is required for completion.</p>
+                        <p><strong>E6-4:</strong> How much you earn on fossilize will not matter as there are many sources to inflate it, and realistically you are only resetting vases, which you already have a generator for.</p>
+                        <p><strong>E6-5:</strong> DP becomes insanely good for Temple XP, Bones and RP. This needs to be hard focused. The rest is just spend evenly due to diminishing returns. You can probably just ignore the Jungle Respawn Time though because you shouldn’t need more from there anymore.</p>
+                        <p><strong>E6-6:</strong> The fifth destabilize can be easily skipped, however if you do it then just upgrade everything evenly. There is also a Temple XP upgrade that should be affordable with this, just don't buy max.</p>
+                        <p><strong>E6-7:</strong> Basically the same reasoning as E6-5.</p>
+                    </div>
+                </details>
+            </div>
+
+            <!-- FAQ SECTION -->
+            <h2 id="faq">Desert Channel FAQ</h2>
+            <div class="note"><strong>Note:</strong> 
+                I HIGHLY suggest using the discord search function to look for other people who may have asked the same question before, even if it isn't found here in the FAQ.
+            </div>
+
+            <p><strong>Q: What is the max cactus cap for the Desert field?</strong><br>
+            A: 50</p>
+
+            <p><strong>Q: If I spend vases, will my water upgrades downgrade?</strong><br>
+            A: No. It will simply lower your water cap.</p>
+
+            <p><strong>Q: What is Sandstorm Power (SSP) based on? What does it do?</strong><br>
+            A: Base sandstorm power increases by 5 per Sandstorm approval level. It is a substitute for True Awaken Power for the Desert Gauntlet.</p>
+
+            <p><strong>Q: What does Destabilize reset? (for people who haven’t reached it)</strong><br>
+            A: Forces a true awaken reset while additionally resetting Collapse, Stack, Regeneration (except SS), Creation Upgrades, and Relics</p>
+
+            <p><strong>Q: What does Twilight reset? (for people who haven’t reached it)</strong><br>
+            A: Resets the entire Desert (except upgrades immune to desert resets, sets to SAL 5), Temple Level, and Star Fragment Upgrades (except non-Desert upgrades)</p>
+
+            <p><strong>Q: Does fossilize increase SAL?</strong><br>
+            A: No, it does not. Unlike Constellation where it forces a Planetary reset, Fossilize simply resets everything that Sandstorm would.</p>
+
+            <p><strong>Q: When do I do a twilight?</strong><br>
+            A: Twilights should generally be done at a significant amount more than the previous one. This number starts high and then scales down but is usually 10x or more per reset to be significant enough.</p>
+
+            <hr style="border-color: #333; margin: 4rem 0;">
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

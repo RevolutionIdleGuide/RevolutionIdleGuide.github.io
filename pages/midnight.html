@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #8b5cf6; /* Midnight Purple */ }
+
+        /* Shared layout & typography (shortened) */
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .toc-box { background-color: #151515; border: 1px solid #333; border-left: 4px solid var(--theme-color); padding: 1.5rem; margin-bottom: 3rem; border-radius: 6px; }
+        .toc-list { list-style: none; column-count: 1; padding-left: 0; font-family: 'Yuruka', 'Orbitron', sans-serif !important; font-weight: 700; }
+        @media (max-width: 768px) { .toc-list { column-count: 1; } }
+
+        h1.main-title { text-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
+
+        /* --- HEADINGS --- */
+        h1.main-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 12px rgba(191, 0, 255, 0.55);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--theme-color);
+            box-shadow: 0 0 10px var(--theme-color);
+        }
+
+        /* Major Checkpoint Headers */
+        h2.major-checkpoint {
+            font-size: 2.5rem;
+            color: var(--theme-color);
+            border-bottom: 4px solid var(--theme-color);
+            text-shadow: 0 0 10px rgba(157, 0, 255, 0.2);
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- TABLE OF CONTENTS --- */
+        .toc-box {
+            background-color: #151515;
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 6px;
+        }
+        .toc-title {
+            font-family: 'Yuruka', 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .toc-list {
+            list-style: none;
+            column-count: 1; /* single column for better hierarchy */
+            padding-left: 0;
+            font-family: 'Yuruka', 'Orbitron', sans-serif !important;
+            font-weight: 700;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list li.toc-divider {
+            display: flex;
+            align-items: center;
+            height: auto;
+            margin: 12px 0;
+            padding: 0;
+            line-height: 0;
+        }
+        .toc-list li.toc-divider::before {
+            content: '';
+            display: block;
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0));
+        }
+        .toc-list .sub-list {
+            margin: 8px 0 8px 24px; /* stronger indent for sub-items */
+            padding-left: 12px;
+            border-left: 2px solid rgba(255,255,255,0.09);
+        }
+        .toc-list a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .toc-list a:hover {
+            color: var(--theme-color);
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .toc-list { column-count: 1; }
+        }
+
+        /* --- CREDITS BOX --- */
+        .credits-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .credits-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--theme-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #bbb;
+        }
+
+        .credit-role {
+            font-weight: bold;
+            color: #fff;
+            margin-right: 5px;
+        }
+
+        /* --- NOTE STYLE --- */
+        .note {
+            background-color: #151515;
+            border-left: 2px solid var(--theme-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+            color: #cccccc;
+            transition: transform 0.2s;
+        }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        /* Warning Text styling */
+        .warning-text {
+            color: #ff5555;
+            font-weight: bold;
+        }
+        
+        /* List Styling */
+        ul { margin-left: 20px; margin-bottom: 1.5rem; }
+        li { margin-bottom: 8px; color: #ddd; }
+
+        /* Sidebar Active Color Override */
+        #sidebar a.active {
+            color: var(--theme-color) !important;
+            border-left-color: var(--theme-color) !important;
+        }
+        #sidebar a:hover {
+            color: var(--theme-color) !important;
+        }
+
+                /* --- TEXT CONTENT STYLES (The fix for spacing) --- */
+        p {
+            line-height: 1.7;        /* Increases space between lines of text */
+            margin-bottom: 1.5rem;   /* Adds space after every paragraph */
+            color: #ccc;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Spacing for lists within the guide content */
+        .guide-container ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-container li {
+            margin-bottom: 0.8rem;   /* Space between list items */
+            line-height: 1.6;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>Midnight Guide</p>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html" class="active">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#intro" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Intro</span></a>
+        <a href="#ml1" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 1</span></a>
+        <a href="#recov1" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Recovery</span></a>
+        <a href="#ml2" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 2</span></a>
+        <a href="#ml3" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 3</span></a>
+        <a href="#ml4" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 4</span></a>
+        <a href="#ml5" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 5</span></a>
+        <a href="#ml6" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Cactus Trials</span></a>
+        <a href="#ml7" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 7</span></a>
+        <a href="#ml10" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 10</span></a>
+        <a href="#ml15" class="dot-item"><div class="dot-circle"></div><span class="dot-label">ML 15</span></a>
+        <a href="#rift" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Great Rift</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">Midnight</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Written by:</span> SigmaFlo44</div>
+                    <div><span class="credit-role">Revised by:</span> GrandDomm</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">Introduction & Notice</a></li>
+                    <li><a href="#ml1">Midnight Level 1</a></li>
+                    <li><a href="#recov-gen">General Midnight Recovery</a></li>
+                    <li><a href="#recov1">Midnight Level 1 Recovery</a></li>
+                    <li class="toc-divider"></li>
+                    <li><a href="#ml2">Midnight Level 2</a></li>
+                    <li><a href="#recov2">Midnight Level 2 Recovery</a></li>
+                    <li><a href="#ml3">Midnight Level 3</a></li>
+                    <li><a href="#recov3">Midnight Level 3 Recovery</a></li>
+                    <li class="toc-divider"></li>
+                    <li><a href="#ml4">Midnight Level 4</a></li>
+                    <li><a href="#ml5">Midnight Level 5</a></li>
+                    <li><a href="#ml6">Midnight Level 6 & Cactus Trials</a></li>
+                    <li><a href="#ml7">Midnight Level 7</a></li>
+                    <li class="toc-divider"></li>
+                    <li><a href="#ml8">Midnight Level 8</a></li>
+                    <li><a href="#ml9">Midnight Level 9</a></li>
+                    <li><a href="#ml10">Midnight Level 10</a></li>
+                    <li><a href="#ml11">Midnight Level 11</a></li>
+                    <li class="toc-divider"></li>
+                    <li><a href="#ml12">Midnight Level 12</a></li>
+                    <li><a href="#ml13">Midnight Level 13</a></li>
+                    <li><a href="#ml14">Midnight Level 14</a></li>
+                    <li><a href="#ml15">Midnight Level 15</a></li>
+                    <li class="toc-divider"></li>
+                    <li><a href="#ml16">Midnight Level 16 - 21</a></li>
+                    <li><a href="#rift">The Great Rift Push</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">Introduction & Notice</h2>
+            <p>You have reached Midnight! Before you get into the guide, there is some important and useful information to note below.</p>
+            
+            <p class="warning-text">You should avoid any of the following actions:</p>
+            <ul>
+                <li class="warning-text">Performing a Midnight without gaining a Midnight Level.</li>
+                <li class="warning-text">Performing a Midnight without reaching the highest available True Awakening Level.</li>
+                <li class="warning-text">Mindlessly buying Midnight essence upgrades. These have a high upgrade cap and harsh scaling causing you to waste your ME and slow down your progress.</li>
+                <li class="warning-text">Destabilizing and Performing a Twilight at the same time. Only Destabilize after fully recovering from a Twilight, especially if you have the desert exp core upgrade.</li>
+            </ul>
+
+            <div class="note"><strong>Note:</strong>  time warps work at 20% effectiveness for the desert and upper Temple, 15% for RP and DP and 10% for gauntlets.</div>
+
+            <p>This guide will ideally serve as a fall back if you can’t progress. You are urged to make your own decisions and experiment.</p>
+
+            <h3>Guide Info & Formatting</h3>
+            <p>This guide will use abbreviations, with the first use of them being marked in bold next to the full version .i.e. <strong>Midnight Essence (ME)</strong>. Names of resets and currencies will also be marked in bold for clarity.</p>
+
+            <p class="warning-text">Any extremely important information will be marked clearly in bold red text as shown here. Notes and misc info will be marked in inclined text.</p>
+
+            <h2 id="ml1">Midnight Level 1</h2>
+            <p>Upon reaching Temple Level 100 you are faced by the Midnight reset. You can read what it resets in game, but it's everything other than TALs and Hall Artifacts. Before Performing your first Midnight, reach Temple level 105 as this will increase your Midnight Essence gain by roughly 60%, giving you 33 ME.</p>
+
+            <p>As for upgrades you should buy: 1 LR generation (light rune), 1 Sand generation, 1 SSP, 1 Core multi, Vase and remnant automation.</p>
+
+            <div class="note"><strong>Note:</strong> 
+                Notes:<br>
+                - You can buy DP instead of some automations if you want to.<br>
+                - Do not buy RP as you are given a x10 RP boost on Midnight level 1.<br>
+                - DO NOT buy Sand or Desert Relic automation (too expansive not worth it).
+            </div>
+
+            <p>Notable Midnight level 1 unlocks:<br>
+            New DP upgrades, New Desert relic upgrade and a new desert gauntlet chamber for Twilight essence.</p>
+
+            <h2 id="recov-gen">General Midnight Recovery</h2>
+            <p>This section will go over the general ways to recover your midnight level, meaning this applies to almost all midnight levels. The next section will go over recovery from Midnight level 1 specifically in more detail.</p>
+
+            <p>Midnight recovery necessitates grinding the desert and cores, so you will have to recover your SALs, as well as getting IL100 (intersection level) to destablize. You will rely on DP upgrades for the desert exp and RP. You will need around 1 Mil+ cores and 23 upgrades on the creation IExp to reach IL100.</p>
+
+            <p>Afterwards you will be able to destabilize , spending remnants on RP, DP, desert EXP and SSP, which will allow you to reach SAL 15 unlocking the upper temple. You’ll have to start focusing on Temple exp upgrades and recovering Desert gauntlet artifacts and SALs.</p>
+
+            <p>Do around 3-4 Twilights each time getting at least x20 more Twilight Essence (TE). Cores, bone upgrades and SALs will be important to reach the Temple level required for the next Midnight Level.</p>
+
+            <h2 id="recov1">Midnight Level 1 Recovery</h2>
+            <p>The first Midnight recovery will be really slow.<br>
+            Firstly get SAL 8, followed by heading to the intersection and reaching il30+ to perform a collapse for 2K+ remnant. Buy 97455 and link automation, which should help you get 100M remnants for cores. Then buy remnant generation (Make sure you disable remnant autobuyers if you had bought it atp) and slowly regain cores.</p>
+
+            <p>For SAL13, you will need to be actively buying DP Desert exp alongside DP RP for cores. This part is a bit of a timewall. Get all RP upgrades (desert relics, DP, and RP) to reach 1Mil cores and creation energy to get 23 upgrades on Iexp. Doing all of the above will allow you to reach IL100. Destablize for around 100K Dremnants. Spend it on DP RP Desert exp and SSP. This will allow you to reach SAL 15.</p>
+
+            <p>Now focus on Temple exp upgrades (Vase, sand and Doom sigils).Star fragments (SF) upgrades will allow you to progress further.</p>
+
+            <p>At Temple level 30 Perform your 2nd Destablize for 6mil+ Dremnants this time buying star fragments and Temple exp, then spending the rest on DP SSP desert exp and RP.</p>
+
+            <p>First Twilight should be done at Temple level 37 with 4 upgrades of Star Fragment TE. You’ll get 1K TE, which should be spent on RP DP Desert exp TAP SSP and Tier 2 artifacts.<br>
+            2nd Twilight at Temple level 52, 12 upgrades of SF TE and 18 upgrades of Bones TE. You’ll get 63K TE, then you should buy next (25 first upgrades) on TAP, Desert EXP and SSP. Spend the rest on DP. Leftovers should be spent on RP, Dremnant and Tier 2 artifacts.<br>
+            3rd Twilight at Temple level 76 with 20 SF TE and 76 Bones TE for 1.8M TE, spend it on the same upgrades while focusing on DP.<br>
+            4th Twilight at temple level 102 for 30Mil TE, get 14 upgrades in DP, Temple EXP, SSP, desert exp and RP afterwards.</p>
+
+            <p>(IF YOU ARE AN ACTIVE PLAYER) After recovering from Twilight and reaching SAL 24, do your 3rd Destabilize for 1B+ Dremnant and buy Temple exp this should boost you to Temple level 110. (if you are passive refer to the next section)</p>
+
+            <h2 id="ml2">Midnight Level 2</h2>
+            <p><strong>For Active Players:</strong> Perform your midnight at Temple level 110-113 for 100+ Midnight essence.</p>
+
+            <p>After Performing the midnight buy 3 DP, 2 Cores, 2 RP, 1 TAP and anything you have left should be spent on SSP. You can also buy Doom sigils and RP automation if you wish to. (DO NOT buy sand and desert relic automation)</p>
+
+            <p><strong>For Passive Players:</strong> After Recovering from your 4th Twilight DO NOT Destablize. Your goal is to reach TAL 32 for the +100% Midnight essence. I will list the upgrades and milestones needed for TAL 32:</p>
+            <ul>
+                <li>SAL 25</li>
+                <li>200+ upgrades on DP Bones, a maxed bone artifact, desert level of 440+ . This is to be able to afford 93 Bone TAP upgrades.</li>
+                <li>Cavern level 2400+ for PLs.</li>
+                <li>75+ upgrades in Twilight Essence TAP (you might need to do a 5th Twilight for 100M+ essence for this)</li>
+                <li>191 upgrades on TAP cactus, max Star fragment TAP, max sand TAP and max desert relic TAP.</li>
+            </ul>
+            <p>After achieving TAL 32, you can Destablize for 3B+ Dremnant buying Temple exp. Reach Temple level 117 for 302 midnight essence. If you decide to buy Sand and Desert Relic automation then buy 4 cores, 4 DP, 3 RP, 6 SSP, 1 TAP, RP and Doom sigil automation, else you can get one more level of DP and cores.</p>
+
+            <p>TAL 32 will also unlock new Light rune upgrades for Desert exp and Temple exp.</p>
+
+            <h2 id="recov2">Midnight Level 2 Recovery</h2>
+            <p>The 2nd Midnight recovery will be similar to the first. The notable Midnight Level 2 buff is Twilight no longer resetting the desert gauntlet and doom sigils.</p>
+
+            <p>The push for IL100 early on will be almost identical, made a little faster with DP and core upgrades.<br>
+            You should as per usual Destabilize as soon as you get it. Getting 300K+ Dremnant. 2nd Destabilize for 20Mil+ focusing on Temple exp, star fragments, RP and DP.</p>
+
+            <p>1st Twilight 2.5K TE (Temple level 40): buy 3 DP upgrades, then spend the rest on RP, SSP and Desert EXP.</p>
+
+            <p>2nd Twilight 200K TE (Temple level 63 + Bone upgrades): buy 9 DP upgrades, then buy 25 of SSP, Desert exp, RP and TAP any left over TE can be spent on whatever you want.</p>
+
+            <p>3rd Twilight for 25M TE (Temple level 95 + Bone upgrades + Twilight artifact): buy 14 DP and 5 Temple exp, then get 50 total upgrades on SSP, Desert EXP, Dremnant, TAP and spend the rest on RP.</p>
+
+            <p>4th Twilight for 300M TE (Temple level 108): buy 16 DP and 5 Midnight Essence. Rest goes to Temple exp and any left overs to Dremnants and Desert exp.</p>
+
+            <p>3rd Destab should be done at around Temple level 114 for 5B+ Dremnants. Make sure you have SAL 25 and 67+ Bone Temple exp upgrades.<br>
+            Buy Temple exp which should be enough to push you to Temple level 120 (this will be a slow process).</p>
+
+            <h2 id="ml3">Midnight Level 3</h2>
+            <p>After getting Temple level 120, you should be getting 800+ Midnight essence.<br>
+            You have unlocked new ME essence upgrades, which I’ll explain in a bit for now. Buy 1 stellar fragment and 1 stellar cactus then get 7-9 core total upgrades 7-9 DP total upgrades then you can spend the rest on RP/TAP (do not buy Star fragment automation, too expansive).</p>
+
+            <p>Notable Midnight level 3 unlocks:<br>
+            - Stellar Cactus and Stellar fragments are platinum-likes with spawn rates of 20% for the cactus and 10% for the fragments. Stellar Cactus is worth x1000 more than a normal cactus and Stellar Fragments are worth x100 more than normal fragments.<br>
+            You can spend them in the newly unlocked shop next to Midnight. I’ll go over the upgrade order of priority.</p>
+
+            <p>For Stellar Cactus: Stellar Fragment Value > Desert Exp > SSP or Bones > Cactus.<br>
+            For Stellar Fragments: Stellar Cactus Value > cores > Temple exp > TAP > Light runes > Star Fragments. (these upgrades not reset on Midnight)<br>
+            - New True awaken milestones.</p>
+
+            <h2 id="recov3">Midnight Level 3 Recovery</h2>
+            <p>As per usual push IL100, this time you’ll be getting SALs more often due to the Stellar Cactus and its upgrades.</p>
+
+            <p>The Twilight levels will be almost the same other than getting more Twilight essence each time due to the Stellar Fragments increasing your Temple level. For example 1st Twilight will be at temple level 45 and for 25K essence, 2nd for 6mil etc.<br>
+            Do a Twilight at around Temple level 111 for 1B+ TE. Buy 5 upgrades of Midnight essence, 16 on Temple exp, 17 on DP and spread the rest equally.</p>
+
+            <p>After reaching SAL 27 and getting 71+ upgrades on Bones Temple exp Perform a Destablize for 7B+ Dremnant and buy Temple exp this will boost you to Temple level 130. This will be a slow process and you'll need to make use of Stellar Fragments and its upgrades, the Light rune Temple exp upgrade will also be useful.</p>
+
+            <h2 id="ml4">Midnight Level 4</h2>
+            <p>After reaching Temple level 130 you can perform a Midnight reset for 1.8-2K ME. Alternatively you can push cores to get 50Qa+ and reach SAL 28, this with 4 levels of Light rune Temple exp can help you push Temple level 133+ for extra ME.</p>
+
+            <p>You’ll get around 2-3K ME. Get 3 Total levels of Stellar fragments 3 of Stellar Cactus, 10-12 Cores, 10-12 RP and DP, 4 LR generation, 7 TAP and the rest can be spent on SSP (you can buy SF automation but you’ll have to forfeit other upgrades)</p>
+
+            <p>Your progression on ML4 will be fairly similar to the previous ones. You will be able to hit TAL 33 at your 2nd Twilight after getting 75+ upgrades of Twilight TAP. This milestone will increase your Stellar fragments and Stellar Cactus by +100%.</p>
+
+            <p>You can also hit TAL 34 at around Temple level 125, this one a little tricker as it’ll require more grinding. I’ll list the upgrades necessary to get TAL 34:</p>
+            <ul>
+                <li>SAL 27, max Bones TAP, max Sand TAP, max desert relic TAP and max Twilight TAP</li>
+                <li>cavern level 2400+</li>
+                <li>122+ Remnant TAP</li>
+                <li>184+ Cactus TAP</li>
+                <li>22+ Stellar TAP</li>
+            </ul>
+
+            <p>At Temple level 130+ Perform a Twilight for 40B TE and buy 25 upgrades of Midnight essence. Leftover TE should be spent on Temple exp and other upgrades (you can ignore DP after maxing the final Bone upgrade). After getting SAL 28+, 75+ Bone Temple exp and Light rune Temple exp upgrades you’ll be able to reach Temple level 140 for 15K+ Midnight Essence</p>
+
+            <p>(it is important that you get 10K+ Midnight essence, getting TAL 34 and the Twilight essence Midnight essence upgrades are essential)</p>
+
+            <h2 id="ml5">Midnight Level 5</h2>
+            <p>After obtaining 10K Midnight essence you should buy 1 tick of Destabilized Remnant generator, any left over ME should be spent on Star Fragment automation, more LR generation, Stellar fragments, Stellar cactus and cores.</p>
+
+            <p>Notable Midnight level 5 unlocks:</p>
+            <ul>
+                <li>SAL now updates automatically when you have the desert level required.</li>
+                <li>Star Fragment AutoCut.</li>
+                <li>New doom sigil upgrades for Stellar Fragment and cactus.</li>
+                <li>New Sand upgrade for Cactus.</li>
+                <li>New Cactus upgrade for Temple exp.</li>
+            </ul>
+
+            <p>To reach Temple level 150 you will need SAL 30 and 79+ Bone Temple exp, alongside Light runes, Twilight essence, Dremnant and Stellar Fragments Temple exp.</p>
+
+            <h2 id="ml6">Midnight Level 6</h2>
+            <p>Perform a Midnight immediately after reaching Temple level 150, you should get 20K+ ME.<br>
+            Go to the Stellar Fragment Shop and go through the newly opened rift</p>
+
+            <h3>Cactus Trials</h3>
+            <p>Upon talking to the cactus god, you will start the Cactus Trials. This is a timed mini-game similar to Planetary trials. You have 10 minutes before you are forced out of the Trials.</p>
+
+            <p>The goal of the Cactus trials is to earn as much Trial score as possible. Trial score is earned by collecting Trial Cacti, which you can upgrade through the Trial Cactus upgrades and Rare Cacti upgrades (rare cacti is the platinum-like of this field).</p>
+
+            <p>If you run out of time OR decide to leave the Trials early you will be awarded Cactus Tokens. These are a currency that is based on your Trial Score (Cactus Tokens = Trial Score/300). You can use this currency in the Token Shop.<br>
+            Trial score will also award you with several buffs to exp types and currencies based on your total trial score in the Trial bonuses board.</p>
+
+            <p>For your first Trial, you should get 30-40K Trial Score. This will award you with 100+ Cactus tokens. You should max out the first cores upgrade, get 5 upgrades on Creation Energy, 5 on Temple exp 2 on Stellar Cactus and Fragments and 2 on TAP (in general temple exp takes priority while spending Cactus Tokens).</p>
+
+            <h3>Midnight Level 6 Continued</h3>
+            <p>Total Trial Score required for this Midnight level: 40k-80K<br>
+            After doing your first trial, head back to the Midnight essence board and buy some more stellar cacti/Fragments and 15 total levels of TAP. Left over ME can be spent on anything you want.</p>
+
+            <p>After reaching SAL 30 and having 45+ Stellar Fragment TAP upgrades you will be able to get TAL 35. If you are struggling with Temple level 160, you might need to do a 2nd Cactus Trial for a total 70-80K score. As for Cactus Tokens you’ll get another 100 which you should spend on 5 Midnight essence upgrades, the rest can go to temple exp.</p>
+
+            <p>At this point you want to get 100K+ ME for the bone generation upgrade, so you’ll have to Twilight for 450B+ TE and get 39 upgrades on ME.<br>
+            (Keep in mind that the Trial score mentioned each Midnight is not set and done, you can get more by doing another trial if you get stuck pushing the next Midnight level)</p>
+
+            <h2 id="ml7">Midnight Level 7</h2>
+            <p>Total Trial Score required for this Midnight level: 300K<br>
+            Perform Midnight at Temple level 161+ for 100K+ ME, and buy Bone generation (Do not get confused with bone automation, the generation costs 100K)</p>
+
+            <p>Notable Midnight level 7 unlocks:<br>
+            - Trial charge generation. Trial charge is a currency that passively generates at a rate of 1/s (time warps work at 50% effectiveness), you can use 3600 Trial charge to buy a +100% boost to Trial score in cactus trials. (this upgrade is reset when you leave the Trials)</p>
+
+            <p>Afterwards you will have to do another Cactus Trial (if you have 3600 Trial charge then use it, if not you might need to do another trial), and reach a total of 300K Trial score. For Cactus Tokens you should max the first TAP upgrade and get 1 level of the next TAP upgrade. Alongside 12 Total Creation upgrades 6 on Stellar Fragment and Cactus, left over Trial Tokens should be spent on Temple exp.</p>
+
+            <p>You should be able to hit TAL 36 at this point after getting SAL 30+ and 59+ Stellar fragment TAP. This will unlock the final artifact in the desert gauntlet for Midnight essence.</p>
+
+            <h2 id="ml8">Midnight Level 8</h2>
+            <p>Total Trial Score required for this Midnight level: 750K<br>
+            Perform Midnight at Temple level 170 for 1M ME. You should get 25 total upgrades on: DP RP SSP cores Stellar fragments, Cactus and TAP. Then buy Bone, DP and Dremnant automation. Any left over ME should be spent on cores.</p>
+
+            <p>Notable Midnight level 8 unlocks:<br>
+            - New core upgrade for Temple exp.</p>
+
+            <p>As for Cactus Tokens you should get around 1K, get 18 total upgrades of Creation and Temple exp, and 10 total upgrades on stellar cactus and fragments.</p>
+
+            <p>To achieve Temple level 180 you will need to make use of the new core upgrade, you will also need the 1Qt DP upgrade for RP to make the cores necessary. You will have to invest into Twilight essence DP.</p>
+
+            <h2 id="ml9">Midnight Level 9</h2>
+            <p>Total Trial Score required for this Midnight level: 1.7-2M<br>
+            Perform your Midnight at level 180+ for 2M+ ME. You unlock new Trial Cacti and Trial Exp upgrades on this midnight level , you should buy 6+ levels of each. Left over ME should be spent on more cores DP and RP.</p>
+
+            <p>Notable Midnight level 9 unlocks:<br>
+            - A new reset in the cactus trials for Tier 1 cactus, this is basically the prestige of the Trials. Tier 1 Cactus resets all Trial cactus upgrades and cactus level. Rare cacti and Trial charge are not reset.<br>
+            - A new Trial cactus upgrade for Tier 1 Cactus.</p>
+
+            <p>You should do a trial and get 900K-1.3M+ Trial score. Utilize the Tier 1 reset as the recovery is almost instant. Early on Trial cactus is the most important upgrade, but I would recommend getting at least 1 or 2 upgrades on exp and Score. (you should not use more than 1 or 2 Trial charges each Midnight level).</p>
+
+            <p>As for spending tokens, max out creation and get 20 total upgrades on Temple exp and max out Midnight essence. The rest can be spent on Stellar cactus and fragments.</p>
+
+            <p>You can also hit TAL 37 this Midnight. This will require doing a 2nd Cactus Trial and buying 11 levels of the 2nd TAP upgrade, SAL 35, cavern level 3000, 79 upgrades on Stellar TAP and max Cactus TAP.</p>
+
+            <h2 id="ml10">Midnight Level 10</h2>
+            <p>Total Trial Score required for this Midnight level: 100M<br>
+            Perform Midnight at Temple level 190 for 5M+ Midnight essence. You should buy 13-15 total upgrades on Trial Exp and Trial Cactus, (IF you have not hit TAL 37 yet buy 35+ Total upgrades of TAP otherwise no need), then spend the rest equally on DP RP cores Stellar Cactus/Fragment.</p>
+
+            <p>Notable Midnight level 10 unlocks:<br>
+            - New Stellar Fragment and Stellar Cactus upgrades (buy these before a Trial).</p>
+
+            <p>As for the Trial you should get 100M+ Score, getting 300K+ Tokens. You should spend them on 40 total upgrades on Temple exp I, 25+ on Star Fragments and Cactus I, 8 levels on Temple exp II, 2 levels on Star Fragments and cactus II. Left over Tokens can be spent on TAP.</p>
+
+            <h2 id="ml11">Midnight Level 11</h2>
+            <p>Total Trial Score required for this Midnight level: 1.1B<br>
+            Perform your Midnight for 8Mil+ ME. get 17 total upgrades on Trial Cactus/Exp and spend the rest equally on Stellar Fragments/cactus, DP, RP and cores.</p>
+
+            <p>For the Trial you should get 1B+ score from it, getting 3M+ Tokens. Max all upgrades up to TAP I then buy 25 on TAP II 25 on Temple exp II, the rest can be spent on stellar cactus/fragments and doom sigils (if you don’t have their upgrades maxed by now). You’ll be able to hit TAL 38 shortly after.</p>
+
+            <h2 id="ml12">Midnight Level 12</h2>
+            <p>Total Trial Score required for this Midnight level: 20B<br>
+            Perform your Midnight for 15M+ ME. Buy the newly unlocked midnight upgrades: Trial Cactus automation, 5 levels of Tier 1 cactus, 2 levels of Tier 2 cactus and the rest goes to Trial Exp and Trial Cactus.</p>
+
+            <p>Notable Midnight level 12 unlocks:<br>
+            - Tier 2 reset in the Cactus Trials. This is the Crystalize variant of the Trials. Tier 2 resets Tier 1 cactus and its upgrades as well as everything Tier 1 resets.<br>
+            - Tier 2 Cactus Value upgrade for Trial Cactus.</p>
+
+            <p>For the Trial you should get 20B+ score, and get 70M+ Tokens. Max Temple exp II and midnight II. Get 70+ upgrades on TAP II 30+ on stellar Cactus/fragments and 11+ on TAP III. You will be able to hit TAL 39 shortly after.</p>
+
+            <p>Getting Temple level 220 will be a little slower than usual, I’ll go over the upgrades and milestones needed for it:<br>
+            SAL 38, 35+ upgrades on Cactus Temple exp, 97 upgrades on Bones Temple exp and 200SX+ cores.</p>
+
+            <h2 id="ml13">Midnight Level 13</h2>
+            <p>Total Trial Score required for this Midnight level: 4T<br>
+            Perform your Midnight for 40M+ ME. You should buy 1 tick of the newly unlocked upgrade Tier 1 Cactus generation, 8+ total upgrades of Tier 1 cactus value and 5+ total upgrades of Tier 2 Cactus Value. Spend the rest on more Trial Exp and Trial Cactus.</p>
+
+            <p>For the Trial you will need to get 4T total score, so either use 2 Trial charges or do two Trials. After obtaining 4T score and 13B+ Trial tokens go spend them on maxing TAP III, Doom sigils I, Temple exp II, Stellar Fragments/cactus II, Midnight II, Midnight III, then get 75+ upgrades on TAP IV, 22 upgrades on Temple EXP III and 5 upgrades on TAP V. You should hit TAL 40 shortly after.</p>
+
+            <p>To get Temple level 230 you’ll need: 600Sx cores and SAL 39.</p>
+
+            <h2 id="ml14">Midnight Level 14</h2>
+            <p>Total Trial Score required for this Midnight level: 15T<br>
+            Perform your Midnight for 140M+ ME. Spend them on 1 tick of Twilight essence generation and 25 total upgrades on Trial cactus and Trial exp.</p>
+
+            <p>Notable Midnight level 14 unlocks:<br>
+            - new upgrades for Stellar cactus (Twilight essence) and Stellar fragments (Midnight essence)</p>
+
+            <p>You should do 1 Trial with 1-2 Trial charge or two trials for 15T total score. You’ll get 30B Tokens that you should spend on exclusively Temple exp III, anything left should be spent on stellar Fragments/Cactus.</p>
+
+            <p>To get Temple level 240 you will need: 2SP cores and SAL40.</p>
+
+            <h2 id="ml15">Midnight Level 15</h2>
+            <p>Total Trial Score required for this Midnight level: 7Qa<br>
+            Perform your Midnight for 3B+ ME. You have unlocked new midnight upgrades which you should buy. Buy Twilight essence automation, Tier 1 Cactus automation 25 total upgrades on Tier 1 and Tier 2 Cactus, 50 total upgrades on Trial Cactus and trial exp 10 upgrades on the new Tier 3 Cactus. Left overs can be spent on TAP.</p>
+
+            <p>Notable Midnight level 15 unlocks:<br>
+            - A new reset in the cactus trials for Tier 3 Cactus. This reset acts like a typical grasshop with milestones, it also awards you with Tier 3 cactus based on cactus level. The milestones are called “Awesome levels” which are very powerful, always increase your awesome level when you can. (you’ll be able to know what cactus level is required on the Tier 3 board)</p>
+
+            <p>For the Trial use 1 or 2 Trial charges (or do two trials) to earn a total of 7 Qa score. You will need to utilize the new Tier 3 reset getting 3 awesome levels. This will give you 20T+ Tokens that you should spend on maxing Temple exp III getting 75 total upgrades on TAP V , 25 on stellar fragments and cactus III each, 6+ upgrades on twilight and 4 upgrades on TAP VI. You will be able to hit TAL 41 immediately, and shortly after TAL 42 at SAL 41.</p>
+
+            <p>To get Temple level 250 you will need: SAL 41 20SP cores.</p>
+
+            <h2 id="ml16">Midnight Level 16 - 21</h2>
+            <h3>Midnight Level 16</h3>
+            <p>Total Trial Score required for this Midnight level: 700Qa<br>
+            Perform your midnight for 5B+ ME. You should buy the newly unlocked Tier 2 cactus generation and 75 total upgrades on Trial exp and cactus. Any left overs can be spent on anything you need.</p>
+
+            <p>For the Trial use 1 or 2 Trial charges (or do two trials) for a total of 700Qa score. You will earn 2Qa+ Tokens, spend them on max stellar cactus and fragments III, 25 levels on Temple exp IV and 40+ levels on Twilight essence. You will be able to reach Awesome level 4 this Midnight.</p>
+
+            <p>Pushing Temple level 260 will require: 30SP cores and SAL 42.</p>
+
+            <h3>Midnight Level 17</h3>
+            <p>Total Trial Score required for this Midnight level: 10Qt<br>
+            Perform your Midnight for 14B+ ME (you can achieve this by maxing Twilight essence Midnight essence and getting 40+ upgrades on stellar fragments Midnight essence). Buy the newly unlocked Stellar generation for 10B and Tier 2 Cactus automation.</p>
+
+            <p>For the Trial as per usual 1/2 Trial charges or Two trials for 10Qt score. You will be able to hit Awesome level 6 this Midnight. You’ll get 30Qa+ Tokens which you should spend on maxing Twilight essence, maxing Temple exp IV, 7+ upgrades on Temple exp V and 50 levels on TAP VI.<br>
+            You will also get TAL 43 soon after.</p>
+
+            <h3>Midnight Level 18</h3>
+            <p>Total Trial Score required for this Midnight level: 70Qt<br>
+            Perform a Midnight for 20B+ ME. Buy the newly unlocked Tier 3 Cactus generation upgrade. For the Trial use 1/2 Trial charges or two trials for 70 Qt total score. You’ll get 210+ Qa Tokens. Focus on buying Temple exp upgrades.</p>
+
+            <p>To reach Temple level 280 you will need 60SP cores and SAL 44.</p>
+
+            <h3>Midnight Level 19</h3>
+            <p>Total Trial Score required for this Midnight level: 1.4Sx<br>
+            Perform your Midnight for 30B+ ME. Max out Trial Cactus and EXP, ignore the Tier 3 automation for now.</p>
+
+            <p>For the Trial use 1/2 Trial charges or two trials for 1.4 Sx total score. You’ll get 4Qt Tokens. Max all upgrades up to TAP VII, then spend the rest on Temple exp. You’ll hit TAL 44 shortly after.</p>
+
+            <h3>Midnight Level 20</h3>
+            <p>Total Trial Score required for this Midnight level: 40-200Sx<br>
+            Perform Midnight for 50B+ ME. Buy Tier 3 Cactus automation. Left overs must be spent on Tier 1/2/3 Cactus upgrades. Awesome level will update automatically this Midnight.</p>
+
+            <p>For the Trial use ALL Trial charge you have, you’ll get 40-200Sx depending on how much charge you had. You will be awarded 100QT+ Tokens, you should spend them exclusively on Temple exp. Left overs can be spent on TAP and ME.</p>
+
+            <h3>Midnight Level 21</h3>
+            <p>Total Trial Score required for this Midnight level: 1Ud<br>
+            Perform Midnight for 400B+ ME. Get as many trial upgrades as you can afford and head immediately to the Trials.</p>
+
+            <p>After hitting Awesome level 13 your stats will quickly start inflating, you will start gaining hundreds of Cactus levels which will allow you to reach the maximum Trial score of 1Ud. (you cannot go above 1Ud Trial score.)</p>
+
+            <p>Once you reach 1Ud leave the Trials then the portal to the Great Rift opens next to the cactus god.</p>
+
+            <h2 id="rift">The Great Rift Push</h2>
+            <p>To Perform the Great Rift reset you will need TAL 47 and ML22. To achieve them, buy all remaining Cactus Token upgrades.</p>
+
+            <p>For Midnight Level 22:<br>
+            Head back to the upper temple to get Temple level 340, this will be a slow process. You will need SAL 51; 200SP cores and 250 LR upgrades on Temple exp.</p>
+
+            <p>For TAL 47:<br>
+            You will need SAL 52, 155 upgrades on stellar fragment TAP and cavern level 4800.</p>
+
+            <p>(MAKE SURE YOU GET TAL 47 BEFORE DOING MIDNIGHT)</p>
+
+            <h3>The Great Rift:</h3>
+            <p>Congratulations on beating the Midnight section of the game. Perform your first Great Rift reset immediately as you cannot increase Rift runes.</p>
+
+            <hr style="border-color: #333; margin: 4rem 0;">
+            
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>

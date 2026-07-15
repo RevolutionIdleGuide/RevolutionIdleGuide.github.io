@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>True Awaken - GCI Guide</title>
+    <!-- FAVICON -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/Main.ico">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PAGE THEME CONFIGURATION --- */
+        :root { --theme-color: #42f5ad; /* Mint Green */ }
+
+        /* =========================================
+           1. SIDEBAR & LAYOUT FIX (The New Code)
+           ========================================= */
+        #sidebar { position: fixed; top: 0; left: 0; width: 250px; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom, 12px); display: flex; flex-direction: column; background-color: #111; z-index: 1000; scrollbar-width: thin; scrollbar-color: var(--theme-color) #111; }
+        #sidebar::-webkit-scrollbar { width: 5px; }
+        #sidebar::-webkit-scrollbar-thumb { background: var(--theme-color); }
+        #dot-nav { position: fixed; left: 280px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 900; width: 180px; }
+        @media (max-height: 850px) { #dot-nav, .dot-nav { display: none !important; } }
+        @media (max-width: 1650px) { #dot-nav, .dot-nav { display: none !important; } }
+        main { margin-left: 260px; padding: 40px; transition: margin 0.3s; position: relative; }
+        @media (max-width: 768px) { main { margin-left: 0; padding: 20px; margin-top: 60px; } #sidebar nav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 12px)); } }
+        #sidebar a.active { color: var(--theme-color) !important; border-left-color: var(--theme-color) !important; }
+        #sidebar a:hover { color: var(--theme-color) !important; }
+
+        /* Typographic base */
+        p { line-height: 1.7; margin-bottom: 1.5rem; color: #ccc; font-family: 'Roboto', sans-serif; }
+        .guide-container ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+        .guide-container li { margin-bottom: 0.8rem; line-height: 1.6; color: #ccc; }
+
+        .toc-box { background-color: #151515; border: 1px solid #333; border-left: 4px solid var(--theme-color); padding: 1.5rem; margin-bottom: 3rem; border-radius: 6px; }
+        .toc-title { font-family: 'Yuruka', 'Orbitron', sans-serif; color: var(--theme-color); margin-bottom: 10px; font-size: 1.2rem; font-weight: 700; }
+        .toc-list { list-style: none; column-count: 1; padding-left: 0; font-family: 'Yuruka', 'Orbitron', sans-serif !important; font-weight: 700; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list .sub-list { margin: 8px 0 8px 24px; padding-left: 12px; border-left: 2px solid rgba(255,255,255,0.09); }
+        .toc-list a { color: #ddd; text-decoration: none; transition: color 0.2s; font-size: 0.95rem; font-weight: 700; }
+        .toc-list a:hover { color: var(--theme-color); text-decoration: underline; }
+        @media (max-width: 768px) { .toc-list { column-count: 1; } }
+
+        /* Page-specific header shadow */
+        h1.main-title { text-shadow: 0 0 10px rgba(66, 245, 173, 0.4); }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--theme-color);
+            box-shadow: 0 0 10px var(--theme-color);
+        }
+
+        /* Major Checkpoint Headers */
+        h2.major-checkpoint {
+            font-size: 2.5rem;
+            color: var(--theme-color);
+            border-bottom: 4px solid var(--theme-color);
+            text-shadow: 0 0 10px rgba(66, 245, 173, 0.2);
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- TABLE OF CONTENTS --- */
+        .toc-box {
+            background-color: #151515;
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-radius: 6px;
+        }
+        .toc-title {
+            font-family: 'Yuruka', 'Orbitron', sans-serif;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .toc-list {
+            list-style: none;
+            column-count: 1; /* single column for better hierarchy */
+            padding-left: 0;
+            font-family: 'Yuruka', 'Orbitron', sans-serif !important;
+            font-weight: 700;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list .sub-list {
+            margin: 8px 0 8px 24px; /* stronger indent for sub-items */
+            padding-left: 12px;
+            border-left: 2px solid rgba(255,255,255,0.09);
+        }
+        .toc-list a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .toc-list a:hover {
+            color: var(--theme-color);
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .toc-list { column-count: 1; }
+        }
+
+        /* --- CREDITS BOX --- */
+        .credits-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-left: 4px solid var(--theme-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .credits-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--theme-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #bbb;
+        }
+
+        .credit-role {
+            font-weight: bold;
+            color: #fff;
+            margin-right: 5px;
+        }
+
+        /* --- NOTE STYLE --- */
+        .note {
+            background-color: #151515;
+            border-left: 2px solid var(--theme-color);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95rem;
+            color: #cccccc;
+            transition: transform 0.2s;
+        }
+        .note:hover { background-color: #1a1a1a; }
+        .note strong { color: #fff; }
+
+        /* Warning Text styling */
+        .warning-text {
+            color: #ff5555;
+            font-weight: bold;
+        }
+        
+        /* List Styling */
+        ul { margin-left: 20px; margin-bottom: 1.5rem; }
+        li { margin-bottom: 8px; color: #ddd; }
+
+        /* Sidebar Active Color Override */
+        #sidebar a.active {
+            color: var(--theme-color) !important;
+            border-left-color: var(--theme-color) !important;
+        }
+        #sidebar a:hover {
+            color: var(--theme-color) !important;
+        }
+
+        /* --- TEXT CONTENT STYLES (The fix for spacing) --- */
+        p {
+            line-height: 1.7;        /* Increases space between lines of text */
+            margin-bottom: 1.5rem;   /* Adds space after every paragraph */
+            color: #ccc;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Spacing for lists within the guide content */
+        .guide-container ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .guide-container li {
+            margin-bottom: 0.8rem;   /* Space between list items */
+            line-height: 1.6;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo" style="color:var(--theme-color); font-weight:bold;">GCI</div>
+        <button id="menu-toggle" style="background:none; border:none; color:#fff; font-size:1.5rem;">☰</button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h1 style="color: var(--theme-color);">GCI</h1>
+            <p>True Awaken Guide</p>
+        </div>
+        <nav>
+            <a href="../index.html">Home</a>
+            <a href="https://roblox-grass-cutting-incremental.fandom.com/wiki/Helpful_Resources" target="_blank" rel="noopener noreferrer">Tools (External)</a>
+
+            <div class="section-title">World 1</div>
+            <a href="origins.html">Early Game</a>
+            <a href="galactic.html">Galactic</a>
+            <a href="planetoid.html">Planetoid</a>
+            <a href="constellations.html">Constellations</a>
+            <a href="supernova.html">Supernova</a>
+            <a href="solarians.html">Solarians</a>
+            <a href="grasslands.html">Grasslands</a>
+            <a href="loops.html">Loops</a>
+            <a href="SML.html">SML &amp; SUML</a>
+            <a href="Omega.html">Omega</a>
+
+            <div class="section-title">World 2</div>
+            <a href="jungle.html">Jungle</a>
+            <a href="true-awaken.html" class="active">True Awaken</a>
+            <a href="desert.html">Desert</a>
+            <a href="midnight.html">Midnight</a>
+            <a href="great-rift.html">Great Rift</a>
+            <a href="doom.html">Doom (DaS)</a>
+
+            <div class="section-title">Bonus</div>
+            <a href="tower.html">The Tower</a>
+            <a href="cool.html">Cool World</a>
+        </nav>
+            <div class="sidebar-maintainer">Maintained by <strong>GrandDom (Actiari)</strong></div>
+    </aside>
+
+    <!-- DOT NAVIGATION -->
+    <div id="dot-nav">
+        <a href="#intro" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Intro</span></a>
+        <a href="#tal1" class="dot-item"><div class="dot-circle"></div><span class="dot-label">TAL 1</span></a>
+        <a href="#gauntlet" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Gauntlet</span></a>
+        <a href="#tal3" class="dot-item"><div class="dot-circle"></div><span class="dot-label">TAL 3</span></a>
+        <a href="#ce" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Creation Energy</span></a>
+        <a href="#collapse" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Collapse</span></a>
+        <a href="#cc" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Complex Creations</span></a>
+        <a href="#cc2" class="dot-item"><div class="dot-circle"></div><span class="dot-label">CC 2</span></a>
+        <a href="#stack" class="dot-item"><div class="dot-circle"></div><span class="dot-label">Stack</span></a>
+        <a href="#cc3" class="dot-item"><div class="dot-circle"></div><span class="dot-label">CC 3</span></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="guide-container">
+            
+            <h1 class="main-title">True Awaken</h1>
+            
+            <div class="credits-box">
+                <div class="credits-header">/// Author Info</div>
+                <div class="credits-grid">
+                    <div><span class="credit-role">Written by:</span> PureSparkles</div>
+                    <div><span class="credit-role">Revised by:</span> 4178, GrandDom</div>
+                </div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc-box">
+                <div class="toc-title">Table of Contents</div>
+                <ul class="toc-list">
+                    <li><a href="#intro">Introduction & Notice</a></li>
+                    <li><a href="#tal1">True Awakening Level 1</a></li>
+                    <li><a href="#gauntlet">The Gauntlet</a></li>
+                    <li><a href="#tal3">True Awakening Level 3</a></li>
+                    <li><a href="#ce">Creation Energy</a></li>
+                    <li><a href="#collapse">Collapse</a></li>
+                    <li><a href="#cc">Complex Creations</a></li>
+                    <li><a href="#cc2">Complex Creation 2</a></li>
+                    <li><a href="#stack">Stack</a></li>
+                    <li><a href="#cc3">Complex Creation 3</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">Introduction & Notice</h2>
+            <p>You have reached True Awaken! This is the beginning of the long grind towards your next major goal. Before you get into the guide, there is some important and useful information to note below.</p>
+            
+            <p class="warning-text">You should avoid any of the following actions:</p>
+            <ul>
+                <li class="warning-text">Performing a True Awaken (TA) without increasing your True Awakening Level (TAL), make sure to increase your True Awakening Power (TAP) from all the available upgrades.</li>
+                <li class="warning-text">Performing a right click on a Light Runes (LR) upgrade with a high cap, cost or scaling cost. This will waste your resources and cause further TALs progression to take longer.</li>
+                <li class="warning-text">Performing a TA or a Collapse when your time multi is below 1.0x</li>
+            </ul>
+
+            <h3>Guide Info & Formatting</h3>
+            <p>This guide will use abbreviations, with the first use of them being marked in bold next to the full version .i.e. <strong>True Awakening Level (TAL)</strong>. Names of resets and currencies will also be marked in bold for clarity.</p>
+
+            <p class="warning-text">Any extremely important information will be marked clearly in bold red text as shown here. Each TAL with notable time required to complete, or a feature unlock, will have its own section, but be sure to ask around for additional help, advice and alternative playstyles.</p>
+
+            <h2 id="tal1">True Awakening Level 1</h2>
+            <p>Welcome to the <strong>True Awakening (TA)</strong> reset layer! Your <strong>True Awakening Level (TAL)</strong> increases every 10x <strong>True Awakening Power (TAP)</strong>.</p>
+
+            <p>If you followed the previous guide you probably got around 250 <strong>Light Runes (LR)</strong>, which is obtainable at PL14+. You want to buy 3 LR TAP upgrades and then spend the rest of your LR equally on the other upgrades. The rule of thumb for LR upgrades is to spend about half on TAP and the other half on the other LR upgrades.</p>
+
+            <p>TAL1 gives you the ability to Multi Awaken, so if you have enough Jungle Levels, you will gain multiple <strong>Awakening Levels (AL)</strong> at once.<br>
+            Take some time to read the True Awakening Milestones or check the in-game help menu. You should buy the new Temple Chart upgrades on your next TALs whenever you have some spare LR.</p>
+
+            <p>You can go back to the Temple Hall in a few hours of gameplay. To reach enough TAP for TAL2 you should focus on getting PL16+ then going for AL40 to gain extra TAP and LR on TA. Note that there’s a Time Multi feature. It awards you with a bigger LR multiplier for long TA runs, but a smaller multiplier if you do a TA too fast. With a Time Multi of 5x and having the recommended stats from above, you should get around 2.2K LR on TAL2.</p>
+
+            <div class="note"><strong>Note 1:</strong> Note that Timewarps have a 50% effectiveness so don’t use timewarps to speed up time multi unless you have a lot to spend.</div>
+            <div class="note"><strong>Note 2:</strong>  it takes 1 hour for the Time Multi to go from 0.01x to 1x and another 23 hours to go from 1x to 10x.</div>
+
+            <h2 id="gauntlet">The Gauntlet</h2>
+            <p>The Gauntlet is an idle-like mechanic that probably reminds you of Solarians. Your damage is based on your highest TAP ever achieved minus the enemy’s defense. You should start by selecting the Relics Chamber and then leaving it until you recover from TAL2. If you’re a passive player, you might want to save your relics for the Jungle EL upgrade. It makes most currencies in the Jungle not get spent on upgrades.</p>
+
+            <p>You should buy Keep Rune S* and Keep Opal B* upgrades in the Temple Chart, and then buy 3 or more upgrades of all the LR upgrades in the Hall..<br>
+            For your next TAL, you should grind up to PL17-18+ for TAP and AL40-41+ for LR. At this point, you should have enough Relics to level up Relics TAP until you get 1k TAP. For passive players, getting extra Relics TAP is also an option in case you want to get extra TAP for the Jungle Artifact. This setup should be enough for 25k LR or more at 9x Time Multi.</p>
+
+            <p>This gameplay loop should give you an idea of what to do to get more TAP for the next couple of TALs:</p>
+            <ul>
+                <li>Remember to always increase your PLs and ALs for extra TAP and LR</li>
+                <li>If you need more relics, then you can go for a higher room in the Relics Chamber</li>
+                <li>Upgrade all the available artifacts once you get enough TAP to max out or get them to a reasonable level in just a few hours (Note that in some TALs you have to wait several hours to get enough TAP)</li>
+            </ul>
+
+            <div class="note"><strong>Note:</strong> Note that higher chamber rooms won’t give more resources compared to the previous ones until you have enough TAP. You want to fight in the rooms where you get the most resources per second/hour.</div>
+
+            <h2 id="tal3">True Awakening Level 3</h2>
+            <p>Congratulations on reaching TAL3, you should buy Keep Rune A*, Keep Opal A*, Starter Rune Generation and Jungle Autocut at the Temple Chart. After all those upgrades, spend the remaining LR in the Hall. At this point you can leave the Gauntlet running on Jungle Chamber while you recover.</p>
+
+            <p>The TAL4 grind might take a while to get. By PL20 you should have around 7k TAP. You may keep leveling up the Jungle Artifact for extra ALs or just focus on the Relics Chamber for Relics TAP. Once your 97455 upgrades cost more than 2No+ (2e30) 97455 you can just wait for Relic TAP.</p>
+
+            <p>You should be able to reach TAL4 at PL22, Relics TAP level 20 and LR TAP level 12. If any of those stats are lower, you might have to wait a bit longer until you get enough TAP. If you got here a bit too fast you might want to take a break and come back a few hours later to increase your Time Multi. Another reminder that the usage of Timewarps are not recommended due to the 50% effectiveness.</p>
+
+            <h2 id="ce">Creation Energy</h2>
+            <p><strong>Creation Energy (CE)</strong> is unlocked at TAL4. It is a passive currency similar to Solar Flares in World 1 - Supernova. For now, the only way to increase the max CE capacity is by increasing your TAL. Later on there will be more upgrades available to boost both CE and max CE cap.</p>
+
+            <p>This is the part of the game where things will slow down because of the passive nature of the progression. This passive gameplay will persist until the end of this document.</p>
+
+            <p>TAL5 will unlock your first Intersection Realm reset so don’t give up now. You may notice that your <strong>Intersection Levels (IL)</strong> are getting closer to IL30, but getting IL30 right now won’t award you anything until you are TAL5+.</p>
+
+            <p>TAL5 can be done with PL29+, Relics TAP 29+ and LR TAP 14+. Once you get there, it is important to wait a bit so you can do a TA with enough LR for the Intersection Autocut upgrade in the Temple Chart as well as having enough LR to upgrade all non TAP upgrades to level 50. From now on, you may start maxing all the available artifacts while you idle.</p>
+
+            <h2 id="collapse">Collapse</h2>
+            <p>Unlocked at IL 30, it is highly recommended to have the Intersection Autocut upgrade at the Temple Chart to make the grind faster.<br>
+            You should perform a Collapse for 75-200+ Remnants so you can buy some TAP and Relics upgrades. There’s a 1.5x compounding Remnant boost for every IL past IL30, and also the Relics Remnants upgrade to help you get to the recommended amount.<br>
+            Note that Collapse also has a Time Multi. It shares the same Time Multi as TA (Doing TA will rest both Collapse and TA Time Multis, and vice versa). Doing a Collapse with enough TAP will not increase your TAL.</p>
+
+            <p>You should start leveling up your Cavern Artifact in case you haven't yet, then you should also get some levels on the Artifact of Power at the Gauntlet so you can reach TAL6.<br>
+            You might have enough TAP to skip TAL6 and go directly to TAL7. This isn’t recommended to do, but if you are a passive player this is an option for you (for this you will need to level up Artifact of Creation for more max CE cap in order to level up CE TAP)</p>
+
+            <h2 id="cc">Complex Creations</h2>
+            <p><strong>Complex Creations (CC)</strong> are unlocked at TAL6. Each new CC requires a higher max CE cap to unlock it. Inside CCs, you will need to progress in the Understanding Realm and the Jungle to reach the necessary Understanding to complete the CC. You can enter the Understanding Realm by clicking on the “Click to Enter” button at the top of the screen. The reason you are progressing outside Understanding Realm is because there are Understanding upgrades for Runes, Rune Fragments (at Construct) and 97455 upgrades.</p>
+
+            <p>Before you start your first CC, there are some things to consider: Post TA upgrades will not work inside CCs other than Auto Awaken and Auto Absorb. Jungle and Cavern Artifacts bonuses will work inside CCs, however if you start leveling up them inside a CC then the artifact bonus will not apply. You may also notice a board that is locked behind “Complexity 2”. Complexity X is the number of the CC you’re doing (e. g. CC2 has a Complexity of 2, CC4 has a Complexity of 4 and so on).</p>
+
+            <p>You should be able to finish CC1 after unlocking the Stability Device and AL13+.<br>
+            After getting the required amount of Understanding for CC1, go back to the Hall and click on the Finish Understanding button to complete CC1. This will unlock the Purity Chamber in the Gauntlet. Doing the Purity Chamber and leveling up its Artifact to the max level will make every T1 Artifact cap out at level 11k. The Purity Chamber can also be a really good source of Relics in case you don’t want to grind the Relics Chamber. This should help you get to TAL8.<br>
+            If you feel that you need some extra TAP, then you can do a Collapse for at least 10x the previous amount. You can also use this Collapse to get the Links autobuyer and later on the 97455 autobuyer.</p>
+
+            <h2 id="cc2">Complex Creation 2</h2>
+            <p>By reaching TAL8 you’re able to do CC2 - Heart. Understanding Heart will unlock the Life Chamber, which awards the Artifact of Life which will generate Regeneration Points (RP). RP will be the main form of getting enough TAP for TAL11.</p>
+
+            <p>For CC2 you should progress in the Jungle up until Intersection. Going to Intersection will help you get a lot more Rune Fragments from Rune Mushrooms, allowing you to increase your Understanding gain faster.<br>
+            You will start CC2 with 100k Understanding and a new reset unlocked at Understanding Level 30 - Breakthrough. For your first Breakthrough you can just get enough to buy at least one of each upgrade, then doing your next Breakthroughs for 3-5x more than the last reset (recovery will be fast).</p>
+
+            <p>After completing CC2, you can focus on maxing out the Artifact of Life. In the meantime you can upgrade RP Remnants so you can do a few Collapse resets to increase your TAP and max CE even further. There’s also a new milestone at PL50 that boosts RP and AL50 that boosts TAP, however you might not be able to reach them until TAL10.</p>
+
+            <h2 id="stack">Stack</h2>
+            <p>TAL10 allows you to form Cores in the Stack board (it can be found next to Collapse). It requires CE, Remnants and RP to form Cores. In order to reach 100M (1e8) Remnants you will need to upgrade Remnants in Relics and RP upgrades. Use your first Core to get the Remnants Generator. Note that Stack is not a reset and it will just convert your currencies into Cores.</p>
+
+            <p>The XP upgrades on Stack boost your XP based on the amount of Total Cores. The more Cores you have in total, the higher your boost will be. Get at least one of each XP upgrade and then keep forming Cores. It will also help you get AL50 and PL50. After this you may go back to RP upgrades and keep upgrading RP TAP until you reach TAL11.</p>
+
+            <h2 id="cc3">Complex Creation 3</h2>
+            <p>You will reach enough max CE for CC3 by TAL11. Make sure to upgrade max CE on Collapse upgrades in case you forgot.</p>
+
+            <p>Core upgrades will work inside CCs, similar to Jungle, Cavern and Intersection Artifacts. You can get CC3 done by doing some Intersection grind until you get some levels of the 97455 Understanding upgrade.</p>
+
+            <p>Finishing CC3 will award you with 3x T2 Artifact Cap and increased base Artifacts drop. You’re getting close to TAL12. Leveling up Artifact of Power and then RP TAP up to level 600+ should be enough for TAL12.</p>
+
+            <hr style="border-color: #333; margin: 4rem 0;">
+            
+        </div>
+    </main>
+
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
