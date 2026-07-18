@@ -7,6 +7,717 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="icon" type="image/x-icon" href="assets/img/Main.ico">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+
+@font-face {
+    font-family: 'Yuruka';
+    src: url('../fonts/FOT-Yuruka Std.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Yuruka', 'Roboto', sans-serif;
+    background-color: #121212; /* Dark background for reading */
+    color: #e0e0e0;
+    line-height: 1.6;
+    display: flex; /* Creates the Sidebar + Main layout */
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+#sidebar {
+    width: 280px;
+    background-color: #0a0a0a;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* Stays in place while scrolling */
+    height: 100vh;
+    overflow-y: auto; /* Scroll sidebar if list is too long */
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 2rem;
+    background-color: #050505;
+    border-bottom: 1px solid #222;
+}
+
+.sidebar-header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    color: #4ade80; /* Grass Green */
+}
+
+.sidebar-header p {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Navigation Links */
+#sidebar nav {
+    padding: 1rem;
+}
+
+#sidebar a {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #bbb;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+/* External link buttons (Wiki) */
+.external-buttons {
+    padding: 0 1rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 0.5rem;
+}
+.external-buttons .btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.external-buttons .btn .btn-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+.external-buttons .btn.wiki { background: linear-gradient(180deg,#16a34a,#15803d); }
+.external-buttons .btn.wiki img { width: 18px; height: 18px; }
+.external-buttons .btn:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+    .external-buttons { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+
+#sidebar a:hover {
+    background-color: #1f2937;
+    color: #4ade80;
+    padding-left: 20px; /* Slide effect */
+}
+
+/* Active Link Styling */
+#sidebar a.active {
+    background-color: #1f2937;
+    color: #4ade80;
+    border-left: 4px solid #4ade80;
+}
+
+/* Main Content Area */
+main {
+    margin-left: 280px; /* Pushes content right of sidebar */
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* GUIDE PAGE STYLING */
+.guide-container {
+    max-width: 900px; /* Limits text width for readability */
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.guide-container h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    color: var(--theme-color);
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1rem;
+}
+
+/* Shared guide theme base (applies across pages using --theme-color variable) */
+h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #333;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100px;
+    height: 2px;
+    background-color: var(--theme-color);
+    box-shadow: 0 0 10px var(--theme-color);
+}
+
+h2.major-checkpoint {
+    font-size: 2.5rem;
+    color: var(--theme-color);
+    border-bottom: 4px solid var(--theme-color);
+    text-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--theme-color);
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 400; /* subheadings: not bold for readability */
+}
+
+.credits-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #333;
+    border-left: 4px solid var(--theme-color);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.credits-header {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: var(--theme-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.note {
+    background-color: #151515;
+    border-left: 2px solid var(--theme-color);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95rem;
+    color: #cccccc;
+    transition: transform 0.2s;
+}
+.note:hover { background-color: #1a1a1a; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background-color: #111;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #222;
+}
+th {
+    background-color: #1f1f1f;
+    color: var(--theme-color);
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+}
+
+/* Warning Text styling */
+.warning-text {
+    color: #ff5555;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* List Styling */
+ul { margin-left: 20px; margin-bottom: 1.5rem; }
+li { margin-bottom: 8px; color: #ddd; }
+
+/* Sidebar Active Color Override */
+#sidebar a.active {
+    color: var(--theme-color) !important;
+    border-left-color: var(--theme-color) !important;
+}
+#sidebar a:hover {
+    color: var(--theme-color) !important;
+}
+
+
+/* HOME PAGE STYLING */
+/* This makes the image cover the whole area to the right */
+.home-bg {
+    width: 100%;
+    height: 100vh;
+    /* CHANGE 'bg.jpg' TO YOUR IMAGE FILENAME */
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../img/bg.jpg'); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.home-content h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    color: #fff;
+    text-shadow: 0 0 20px #4ade80;
+}
+
+.home-content p {
+    font-size: 1.5rem;
+    color: #ddd;
+}
+
+/* Mobile Header (Hidden on Desktop) */
+.mobile-header {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body { display: block; }
+    
+    #sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 100%;
+    }
+
+    #sidebar.active { transform: translateX(0); }
+
+    main { margin-left: 0; }
+
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        background: #0a0a0a;
+        position: sticky;
+        top: 0;
+        z-index: 2000;
+    }
+
+    .home-content h1 { font-size: 2.5rem; }
+}
+
+/* Add to bottom of style.css */
+
+.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #666; /* Muted gray */
+    margin-top: 1.5rem; /* Space before new section */
+    margin-bottom: 0.5rem;
+    padding-left: 15px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+/* caret indicator */
+.section-title .section-caret {
+    width: 12px;
+    height: 12px;
+    border-left: 2px solid #888;
+    border-bottom: 2px solid #888;
+    transform: rotate(-45deg);
+    display: inline-block;
+    margin-left: 10px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* collapsed links container */
+.sidebar-section .section-links {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s ease, padding 0.2s ease;
+    padding-left: 4px;
+}
+
+/* open state */
+.sidebar-section.open .section-links {
+    max-height: 2000px; /* large enough for content */
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* rotate caret when open */
+.sidebar-section.open .section-title .section-caret {
+    transform: rotate(45deg);
+    border-color: var(--theme-color);
+}
+
+/* small spacing for links inside section */
+.sidebar-section .section-links a { padding-left: 24px; }
+
+/* Section title color variants */
+.section-title.w1 { color: #4ade80; }
+.section-title.w2 { color: #15803d; }
+.section-title.bonus { color: #00e1ff; }
+
+/* Caret color per section */
+.section-title.w1 .section-caret { border-left-color: #4ade80; border-bottom-color: #4ade80; }
+.section-title.w2 .section-caret { border-left-color: #15803d; border-bottom-color: #15803d; }
+.section-title.bonus .section-caret { border-left-color: #00e1ff; border-bottom-color: #00e1ff; }
+
+/* Keep title color obvious when open */
+.sidebar-section.open .section-title.w1 { color: #4ade80; }
+.sidebar-section.open .section-title.w2 { color: #15803d; }
+.sidebar-section.open .section-title.bonus { color: #00e1ff; }
+
+/* --- Sidebar section color themes --- */
+.sidebar-section.w1 .section-title { color: #9AE6B4 !important; }
+.sidebar-section.w2 .section-title { color: #16A34A !important; }
+.sidebar-section.bonus .section-title { color: #06B6D4 !important; }
+
+/* caret color per section when open */
+.sidebar-section.w1.open .section-title .section-caret { border-color: #9AE6B4; }
+.sidebar-section.w2.open .section-title .section-caret { border-color: #16A34A; }
+.sidebar-section.bonus.open .section-title .section-caret { border-color: #06B6D4; }
+
+/* ensure links in section use theme on hover */
+.sidebar-section.w1 .section-links a:hover { color: #9AE6B4; }
+.sidebar-section.w2 .section-links a:hover { color: #16A34A; }
+.sidebar-section.bonus .section-links a:hover { color: #06B6D4; }
+
+/* Maintainer note styles */
+.sidebar-maintainer {
+    margin: 1rem;
+    padding: 0.6rem 0.9rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid #222;
+    border-radius: 8px;
+    color: #ddd;
+    font-size: 0.85rem;
+    text-align: center;
+}
+.sidebar-maintainer strong { color: #4ade80; font-weight:700; }
+
+.maintained-note {
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    color: #cfd8cc;
+}
+.maintained-note strong { color: #4ade80; font-weight:600; }
+
+
+
+/* --- DOT NAVIGATION (Left Side) --- */
+#dot-nav {
+    position: fixed;
+    left: 300px; /* Sidebar width (280px) + 20px gap */
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 900;
+}
+
+.dot-item {
+    display: grid;
+    grid-template-columns: 20px 3ch 1fr; /* circle | number | label */
+    align-items: center;
+    text-decoration: none;
+    opacity: 0.9; /* high default visibility */
+    transition: all 0.22s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dot-item:hover, .dot-item.active {
+    opacity: 1;
+    transform: scale(1.12);
+}
+
+.dot-circle {
+    width: 16px; /* larger and easier to see */
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid var(--theme-color); /* use theme color */
+    background-color: var(--theme-color); /* theme fill, controlled by opacity */
+    opacity: 0.22; /* subtle by default */
+    transition: all 0.22s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6) inset;
+}
+
+.dot-item:hover .dot-circle {
+    opacity: 0.45; /* brighter on hover */
+}
+
+.dot-item.active .dot-circle {
+    opacity: 1; /* fully bright when active */
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+    box-shadow: 0 0 18px var(--theme-color), 0 8px 22px rgba(0,0,0,0.45);
+}
+
+.dot-label {
+    margin-left: 12px;
+    font-family: 'Yuruka', 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    color: var(--theme-color); /* label uses theme color */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0,0,0,0.6);
+    /* keep labels visible for accessibility */
+    font-weight: 400; /* sublabels normal to improve scanability */
+}
+
+/* Make top-level dot labels bold for emphasis */
+.dot-item.level-1 .dot-label { font-weight: 700; }
+
+.dot-item.level-2 .dot-label { font-weight: 400; }
+.dot-item.level-3 .dot-label { font-weight: 400; }
+.dot-item.level-4 .dot-label { font-weight: 400; }
+
+.dot-item.active .dot-label {
+    text-shadow: 0 0 14px var(--theme-color);
+    color: var(--theme-color);
+}
+
+/* Grouped dot nav layout (parent + children) */
+.dot-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.dot-children { margin-left: 0; display: flex; flex-direction: column; gap: 6px; }
+.dot-children.sub-level { margin-left: 0; }
+
+/* Base dot item layout */
+.dot-item { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.dot-item .dot-num { color: var(--theme-color); font-weight: 700; width: 3ch; text-align: right; margin-left: 6px; }
+.dot-item .dot-label { display: block; text-align: left; }
+
+/* Indentation and hierarchy for dot nav levels */
+.dot-item.level-1 { padding-left: 0; }
+.dot-item.level-1 .dot-label { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
+
+.dot-item.level-2 { padding-left: 0; }
+.dot-item.level-2 .dot-circle { width: 12px; height: 12px; border-width: 2px; }
+.dot-item.level-2 .dot-label { font-size: 0.88rem; opacity: 0.98; font-weight: 700; text-transform: none; letter-spacing: 0.2px; }
+
+.dot-item.level-3 { padding-left: 0; }
+.dot-item.level-3 .dot-circle { width: 10px; height: 10px; border-width: 2px; }
+.dot-item.level-3 .dot-label { font-size: 0.82rem; opacity: 0.95; font-weight: 700; }
+
+.dot-item.level-4 { padding-left: 0; }
+.dot-item.level-4 .dot-circle { width: 8px; height: 8px; border-width: 2px; }
+.dot-item.level-4 .dot-label { font-size: 0.76rem; opacity: 0.9; font-weight: 700; }
+
+
+/* Uncomment below if you only want text on hover/active */
+/* .dot-item:hover .dot-label, .dot-item.active .dot-label { opacity: 1; } */
+
+/* Uncomment below if you only want text on hover/active */
+/* .dot-item:hover .dot-label, .dot-item.active .dot-label { opacity: 1; } */
+
+/* Hide dots on mobile/tablets where space is tight */
+@media (max-width: 1100px) {
+    #dot-nav { display: none; }
+}
+
+/* Optional content override: ensure bonus sections are not highlighted with theme color */
+.bonus-section,
+.bonus-section * {
+    background: transparent !important;
+    border-left: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* --- CUSTOM SCROLLBAR STYLING --- */
+
+/* For Webkit Browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the vertical scrollbar */
+    height: 8px; /* Height of the horizontal scrollbar */
+}
+
+/* The Track (Background) */
+::-webkit-scrollbar-track {
+    background: #0a0a0a; /* Matches your Sidebar background */
+}
+
+/* The Handle (The moving part) */
+::-webkit-scrollbar-thumb {
+    background: #333; /* Dark Grey */
+    border-radius: 4px; /* Soft edges */
+}
+
+/* Handle on hover (When you mouse over it) */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Slightly lighter grey */
+}
+
+/* For Firefox (different syntax) */
+* {
+    scrollbar-width: thin; /* Makes it skinnier */
+    scrollbar-color: #333 #0a0a0a; /* Thumb Color | Track Color */
+}
+
+/* --- COLLAPSIBLE SIDEBAR STYLES --- */
+
+/* Desktop Toggle Button (Visible when sidebar is closed) */
+#desktop-expand-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 2000;
+    background-color: #1a1c29;
+    border: 1px solid #333;
+    color: var(--theme-color);
+    font-size: 1.5rem;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: none; /* Hidden by default (sidebar is open) */
+    transition: all 0.3s;
+}
+
+#desktop-expand-btn:hover {
+    background-color: #2a2d42;
+    box-shadow: 0 0 10px var(--theme-color);
+}
+
+/* Sidebar Collapse Button (Inside the sidebar) */
+#sidebar-collapse-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#sidebar-collapse-btn:hover {
+    color: var(--theme-color);
+}
+
+/* Transitions for smooth movement */
+#sidebar, main, #dot-nav {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Force heading and UI font to use Yuruka where appropriate (headings, sidebar, dots) */
+/* Keep body and content readable using Roboto */
+#sidebar, .sidebar-header h1, .sidebar-header p, #sidebar a, h1, h2, h3, .credits-header, .section-title, .dot-label {
+    font-family: 'Yuruka', 'Orbitron', sans-serif !important;
+}
+
+/* Ensure content like paragraphs, TOC, tables use Roboto (readable) */
+body, p, li, .toc-list, table, th, td, .note, .qa-box, .credits-grid {
+    font-family: 'Roboto', 'Yuruka', sans-serif;
+}
+
+/* --- COLLAPSED STATE (Applied via JS) --- */
+body.collapsed #sidebar {
+    transform: translateX(-100%); /* Hides sidebar to the left */
+}
+
+body.collapsed main {
+    margin-left: 0; /* Expands content to fill screen */
+}
+
+body.collapsed #desktop-expand-btn {
+    display: block; /* Show the open button */
+}
+
+/* Move dots to the left when sidebar is gone */
+body.collapsed #dot-nav {
+    left: 40px; 
+}
+
+/* --- CLEAN TABLE OF CONTENTS --- */
+.toc-box {
+    background-color: #151515;
+    border: 1px solid #333;
+    border-left: 4px solid var(--theme-color);
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    border-radius: 6px;
+    width: 100%; /* Ensures it uses full available space */
+}
+
+.toc-title {
+    font-family: 'Yuruka', 'Orbitron', sans-serif;
+    color: var(--theme-color);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.toc-list {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+    display: block !important; /* Kills any inherited grids */
+}
+
+/* Base items */
+.toc-list li {
+    display: block !important; /* Force text to use full width */
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+/* Sub-list (The container div you used in HTML) */
+.toc-list .sub-list {
+    display: block !important;
+    margin: 5px 0 10px 25px !important; /* Indent */
+    padding-left: 15px !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toc-list a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.4;
+    display: inline-block; /* Allows width to be calculated correctly */
+    transition: color 0.2s;
+}
+
+.toc-list a:hover {
+    color: var(--theme-color);
+    text-decoration: underline;
+}
+
+/* Desktop: Allow two columns ONLY if the box is wide enough */
+@media (min-width: 1200px) {
+    /* Optional: Uncomment below if you want two columns back */
+    /* .toc-list { column-count: 1; } */
+}
+
+</style>
 </head>
 <body>
 
